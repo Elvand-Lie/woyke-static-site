@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#faf8f5"><meta name="description" content="WOYKE checkout static prototype."><title>Checkout — WOYKE</title><link rel="stylesheet" href="/assets/css/site.css"></head>
+<body data-page="checkout" data-initial-header="light">
+<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header><div id="mobile-menu"></div>
+<main id="main">
+  <section class="page-hero checkout-hero" data-header-theme="light"><div class="container"><div class="section-kicker">Secure checkout / static demo</div><h1 class="display-lg">Complete the ritual.</h1><p class="lede">A premium purchase should end with clarity: what is being made, where it is going and what happens next.</p></div></section>
+  <section class="scene scene-ivory checkout-scene" data-header-theme="light"><div class="container checkout-layout">
+    <form id="checkout-form" class="checkout-form">
+      <fieldset><legend>Contact</legend><div class="form-grid"><label>Email<input required type="email" name="email" autocomplete="email" value="demo@woyke.example"></label><label>Phone<input required name="phone" autocomplete="tel" value="+65 8123 4567"></label></div></fieldset>
+      <fieldset><legend>Delivery address</legend><div class="form-grid"><label>Full name<input required name="name" autocomplete="name"></label><label>Country<select name="country"><option>Singapore</option><option>Indonesia</option><option>Malaysia</option></select></label><label class="wide">Address<input required name="address" autocomplete="street-address"></label><label>City<input required name="city" autocomplete="address-level2"></label><label>Postal code<input required name="postal" autocomplete="postal-code"></label></div></fieldset>
+      <fieldset><legend>Delivery</legend><label class="choice-row"><input type="radio" name="delivery" checked><span><strong>Complimentary insured delivery</strong><small>Estimated after 3–4 weeks of crafting</small></span><span>SGD 0</span></label><label class="choice-row"><input type="radio" name="delivery"><span><strong>Atelier collection</strong><small>Appointment required</small></span><span>SGD 0</span></label></fieldset>
+      <fieldset><legend>Payment demonstration</legend><div class="payment-options"><label><input type="radio" name="payment" checked> Card</label><label><input type="radio" name="payment"> PayNow</label><label><input type="radio" name="payment"> Apple Pay</label><label><input type="radio" name="payment"> GrabPay</label></div><p class="prototype-note">No payment SDK is loaded. This screen demonstrates hierarchy and trust only.</p></fieldset>
+      <label class="terms-row"><input required type="checkbox"> I understand this is a static prototype and no order will be charged.</label>
+      <button class="btn" type="submit"><span>Place demo order</span><span>→</span></button>
+    </form>
+    <aside class="checkout-summary"><p class="mono">Your design</p><article><img src="/assets/media/images/jade-final-statement.webp" alt="Imperial Jade Bloom Ring"><div><h2>Imperial Jade Bloom Ring</h2><p>Imperial jade · Platinum 950 · Size 7</p><a href="/design/">Edit design</a></div></article><div><span>Subtotal</span><strong>SGD 12,800</strong></div><div><span>Insured delivery</span><span>Complimentary</span></div><div class="order-total"><span>Total</span><strong>SGD 12,800</strong></div><p class="prototype-note">Estimated crafting lead time: 3–4 weeks.</p></aside>
+  </div></section>
+</main>
+<footer id="site-footer"></footer><script type="module" src="/assets/js/site.js"></script><script type="module" src="/assets/js/commerce.js"></script>
+</body></html>

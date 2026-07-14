@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+.next/
+.vercel/
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+
+# OS files
+.DS_Store
+._*
+Thumbs.db
+
+# Excluded by request
+screenshots/
+
+# Temporary / Local
+*.log
+.env
+.env.local

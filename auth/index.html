@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#151411"><meta name="description" content="WOYKE customer sign-in static prototype."><title>Sign In — WOYKE</title><link rel="stylesheet" href="/assets/css/site.css"></head>
+<body data-page="account" data-initial-header="dark">
+<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header><div id="mobile-menu"></div>
+<main id="main">
+  <section class="auth-shell" data-header-theme="dark">
+    <div class="auth-media"><img src="/assets/media/images/hero-model.webp" alt="Model wearing diamond jewellery"><div class="auth-media-shade"></div><div class="auth-media-copy"><span class="section-kicker">Private account</span><h1>Keep the designs<br>that belong to you.</h1><p>Save a piece, return to it, share it privately and follow its journey through the atelier.</p></div></div>
+    <div class="auth-panel">
+      <form id="auth-form" class="auth-form" novalidate>
+        <div class="section-kicker">Demo sign in</div><h2>Welcome back.</h2><p class="lede">Use the demonstration details below. No real account is created.</p>
+        <div id="auth-credentials" class="demo-credentials mono"><span>PHONE / +65 8123 4567</span><span>PASSWORD / woyke-demo</span><span>OTP / 123456</span></div>
+        <div data-auth-step="credentials">
+          <label>Phone number<input required name="phone" type="tel" autocomplete="tel" value="+65 8123 4567"></label>
+          <label>Password<input required name="password" type="password" autocomplete="current-password" value="woyke-demo"></label>
+          <button id="request-otp" class="btn" type="button"><span>Request demo OTP</span><span>→</span></button>
+        </div>
+        <div data-auth-step="otp" hidden>
+          <label>One-time password<input required name="otp" inputmode="numeric" maxlength="6" value="123456"></label>
+          <button class="btn" type="submit"><span>Verify and continue</span><span>→</span></button>
+          <button id="auth-back" class="text-button" type="button">Use different details</button>
+        </div>
+        <p id="auth-status" class="form-status" hidden></p>
+      </form>
+    </div>
+  </section>
+</main>
+<footer id="site-footer"></footer><script type="module" src="/assets/js/site.js"></script><script type="module" src="/assets/js/commerce.js"></script>
+</body></html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#faf8f5" />
+  <meta name="description" content="Browse the WOYKE static jewellery collection." />
+  <title>The Collection — WOYKE</title>
+  <link rel="stylesheet" href="/assets/css/site.css" />
+</head>
+<body data-page="shop" data-initial-header="light">
+  <a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header><div id="mobile-menu"></div>
+  <main id="main">
+    <section class="shop-campaign-hero" data-header-theme="light">
+      <div class="shop-campaign-copy"><div class="section-kicker">Collection / Static prototype</div><h1>Objects with<br>somewhere to go.</h1><p class="lede">Begin from an existing form, then change the occasion, material, stone and meaning.</p><a class="text-link dark" href="#collection-grid">Browse the collection <span>↓</span></a></div>
+      <div class="shop-campaign-collage" aria-label="Featured jewellery">
+        <figure class="shop-collage-main"><img src="/assets/media/images/jade-final-statement.webp" alt="Imperial Jade Bloom Ring"><figcaption class="mono">IMPERIAL JADE BLOOM</figcaption></figure>
+        <figure><img src="/assets/media/images/necklace-heart.webp" alt="Heart Halo Necklace"><figcaption class="mono">HEART HALO</figcaption></figure>
+        <figure><img src="/assets/media/images/bracelet-radiant.webp" alt="Radiant Line Bracelet"><figcaption class="mono">RADIANT LINE</figcaption></figure>
+      </div>
+    </section>
+    <section id="collection-grid" class="scene scene-ivory" data-header-theme="light">
+      <div class="container">
+        <div class="filter-bar" aria-label="Product filters">
+          <button class="filter-chip" type="button" aria-pressed="true" data-category="all">All</button>
+          <button class="filter-chip" type="button" aria-pressed="false" data-category="rings">Rings</button>
+          <button class="filter-chip" type="button" aria-pressed="false" data-category="necklaces">Necklaces</button>
+          <button class="filter-chip" type="button" aria-pressed="false" data-category="bracelets">Bracelets</button>
+          <input id="shop-search" class="search-field" type="search" placeholder="Search the collection" aria-label="Search jewellery" />
+        </div>
+        <div class="shop-grid" id="shop-grid">
+          <article class="shop-card featured" data-category="rings"><a href="/product/"><div class="shop-card-media"><img src="/assets/media/images/jade-final-statement.webp" alt="Imperial Jade Bloom Ring"></div><div class="shop-card-info"><div><p class="mono">Rings / Statement</p><h3>Imperial Jade Bloom Ring</h3><p>Imperial jade · Platinum 950</p></div><span class="mono">SGD 12,800</span></div></a></article>
+          <article class="shop-card" data-category="rings"><a href="/product/"><div class="shop-card-media"><img src="/assets/media/images/ring-radiant-floral.webp" alt="Radiant Floral Ring"></div><div class="shop-card-info"><div><p class="mono">Rings</p><h3>Radiant Floral Ring</h3><p>Lab diamond · Yellow gold</p></div><span class="mono">SGD 13,500</span></div></a></article>
+          <article class="shop-card" data-category="rings"><a href="/product/"><div class="shop-card-media"><img src="/assets/media/images/ring-pear-close.webp" alt="Pear Solitaire Ring"></div><div class="shop-card-info"><div><p class="mono">Rings</p><h3>Pear Solitaire Ring</h3><p>Lab diamond · White gold</p></div><span class="mono">SGD 8,900</span></div></a></article>
+          <article class="shop-card" data-category="necklaces"><a href="/product/"><div class="shop-card-media"><img src="/assets/media/images/necklace-heart.webp" alt="Heart Halo Necklace"></div><div class="shop-card-info"><div><p class="mono">Necklaces</p><h3>Heart Halo Necklace</h3><p>Heart diamond · Yellow gold</p></div><span class="mono">SGD 7,900</span></div></a></article>
+          <article class="shop-card featured" data-category="bracelets"><a href="/product/"><div class="shop-card-media"><img src="/assets/media/images/bracelet-radiant.webp" alt="Radiant Line Bracelet"></div><div class="shop-card-info"><div><p class="mono">Bracelets / Ceremony</p><h3>Radiant Line Bracelet</h3><p>Lab diamond · Yellow gold</p></div><span class="mono">SGD 9,400</span></div></a></article>
+          <article class="shop-card" data-category="bracelets"><a href="/product/"><div class="shop-card-media"><img src="/assets/media/images/bracelet-charm.webp" alt="Memory Charm Bracelet"></div><div class="shop-card-info"><div><p class="mono">Bracelets</p><h3>Memory Charm Bracelet</h3><p>Diamond charms · Yellow gold</p></div><span class="mono">SGD 6,800</span></div></a></article>
+          <article class="shop-card" data-category="bracelets"><a href="/product/"><div class="shop-card-media"><img src="/assets/media/images/bracelet-bar.webp" alt="Quiet Bar Bracelet"></div><div class="shop-card-info"><div><p class="mono">Bracelets</p><h3>Quiet Bar Bracelet</h3><p>Engravable · Yellow gold</p></div><span class="mono">SGD 2,900</span></div></a></article>
+          <article class="shop-card" data-category="necklaces"><a href="/product/"><div class="shop-card-media"><img src="/assets/media/images/necklace-princess.webp" alt="Princess Halo Necklace"></div><div class="shop-card-info"><div><p class="mono">Necklaces</p><h3>Princess Halo Necklace</h3><p>Princess diamond · Yellow gold</p></div><span class="mono">SGD 8,200</span></div></a></article>
+          <article class="shop-card" data-category="necklaces"><a href="/product/"><div class="shop-card-media"><img src="/assets/media/images/necklace-emerald.webp" alt="Emerald Pendant"></div><div class="shop-card-info"><div><p class="mono">Necklaces</p><h3>Emerald Pendant</h3><p>Emerald cut · Platinum 950</p></div><span class="mono">SGD 8,800</span></div></a></article>
+        </div>
+        <p id="shop-empty" class="empty-state" hidden>No pieces match this search.</p>
+      </div>
+    </section>
+  </main>
+  <footer id="site-footer"></footer>
+  <script type="module" src="/assets/js/site.js"></script><script type="module" src="/assets/js/shop.js"></script>
+</body>
+</html>
