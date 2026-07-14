@@ -1,25 +1,93 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#151411"><meta name="description" content="Static eleven-step WOYKE jewellery configurator prototype."><title>Design Your Own — WOYKE</title><link rel="stylesheet" href="/assets/css/site.css"></head>
-<body data-page="design" data-initial-header="dark">
-<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header><div id="mobile-menu"></div>
-<main id="main" class="configurator configurator-v3" data-header-theme="dark">
-  <section class="config-controls" aria-labelledby="config-question-title">
-    <div class="config-progress"><span id="config-current" class="mono">01 / 11</span><div class="progress-track"><div id="config-fill" class="progress-fill"></div></div><span id="config-label" class="mono">OCCASION</span></div>
-    <div class="config-question"><div class="section-kicker">Digital atelier</div><h1 id="config-question-title">Begin with a reason.</h1><p id="config-copy">Choose the moment this piece should remember.</p></div>
-    <div id="config-options" class="config-options"></div>
-    <div class="config-actions"><button id="config-back" class="btn btn-secondary" type="button"><span>Back</span></button><button id="config-next" class="btn btn-light" type="button"><span>Continue</span><span>→</span></button></div>
-  </section>
-  <aside class="config-preview" aria-label="Live editorial jewellery preview">
-    <div class="config-photo-stage">
-      <img id="config-preview-image" src="/assets/media/images/ring-radiant-floral.webp" alt="Current jewellery design preview">
-      <div class="config-photo-wash"></div>
-      <div class="config-preview-caption"><span class="mono">PHOTO-FIRST DESIGN STUDY</span><h2 id="preview-design-name">Your first form</h2><p id="preview-design-copy">A live mock preview changes with the choices that have a suitable visual asset.</p></div>
-      <figure class="config-macro-window"><img id="config-macro-image" src="/assets/media/images/ring-pear-close.webp" alt="Macro jewellery detail"><figcaption class="mono">MACRO / DETAIL</figcaption></figure>
-    </div>
-    <div class="preview-price"><span class="mono">DEMO TOTAL</span><strong id="preview-price-value">SGD 5,400</strong></div>
-    <div class="preview-specs mono"><span id="preview-form-label">FORM / RING</span><span id="preview-stone-label">STONE / DIAMOND</span><span id="preview-metal-label">METAL / 18K YELLOW GOLD</span><span>DESIGN / WY-LIVE-01</span></div>
-  </aside>
-</main>
-<footer id="site-footer"></footer><script type="module" src="/assets/js/site.js"></script><script type="module" src="/assets/js/design.js"></script>
-</body></html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#151411">
+  <meta name="description"
+    content="WOYKE digital atelier configurator powered by the existing product, option and preview engine.">
+  <title>Design Your Own — WOYKE</title>
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="/assets/css/configurator.css">
+</head>
+
+<body data-page="design" data-initial-header="split">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header"></header>
+  <div id="mobile-menu"></div>
+
+  <main id="main" class="configurator-engine" data-header-theme="split">
+    <section class="atelier-controls" aria-labelledby="config-question-title">
+      <div class="atelier-topline">
+        <div>
+          <span class="mono">Digital atelier</span>
+          <strong id="config-product-name">Imperial Jade Bloom Ring</strong>
+        </div>
+        <button id="config-reset" class="atelier-reset" type="button">Start over</button>
+      </div>
+
+      <div class="atelier-progress" aria-label="Configuration progress">
+        <span id="config-current" class="mono">01 / 11</span>
+        <div class="atelier-progress-track" aria-hidden="true">
+          <div id="config-fill" class="atelier-progress-fill"></div>
+        </div>
+        <span id="config-label" class="mono">OCCASION</span>
+      </div>
+      <p id="config-substep" class="atelier-substep mono"></p>
+
+      <div id="config-editor" class="atelier-editor">
+        <div class="atelier-question">
+          <span id="config-kicker" class="section-kicker">Begin with a reason</span>
+          <h1 id="config-question-title">Choose Your Occasion</h1>
+          <p id="config-copy">Every piece tells a story. What is yours?</p>
+        </div>
+
+        <div id="config-guide" class="atelier-guide" hidden></div>
+        <div id="config-options" class="atelier-options" role="radiogroup"></div>
+        <div id="config-extras" class="atelier-extras"></div>
+        <p id="config-validation" class="atelier-validation" role="status" aria-live="polite"></p>
+      </div>
+
+      <div id="config-summary" class="atelier-summary" hidden></div>
+
+      <div class="atelier-actions">
+        <button id="config-back" class="btn btn-secondary" type="button"><span>Back</span></button>
+        <button id="config-next" class="btn btn-light" type="button"><span>Continue</span><span>→</span></button>
+      </div>
+    </section>
+
+    <aside class="atelier-preview" aria-label="Live jewellery preview">
+      <div id="config-preview-stage" class="atelier-preview-stage">
+        <img id="config-preview-image" src="/assets/media/images/ring-radiant-floral.webp"
+          alt="Current jewellery configuration preview">
+        <div class="atelier-preview-glow" aria-hidden="true"></div>
+        <span id="config-preview-badge" class="atelier-preview-badge mono">REPRESENTATIVE PREVIEW</span>
+        <div class="atelier-preview-caption">
+          <span id="preview-reference" class="mono">WOYKE / LIVE STUDY</span>
+          <h2 id="preview-design-name">A piece shaped by you.</h2>
+          <p id="preview-design-copy">The image changes whenever a matching generated preview is available.</p>
+        </div>
+      </div>
+
+      <div class="atelier-preview-footer">
+        <div class="atelier-preview-price">
+          <span class="mono">DEMO TOTAL</span>
+          <strong id="preview-price-value">SGD 12,800</strong>
+        </div>
+        <div class="atelier-preview-specs mono">
+          <span id="preview-form-label">FORM / —</span>
+          <span id="preview-stone-label">STONE / —</span>
+          <span id="preview-metal-label">METAL / —</span>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <div id="config-toast" class="atelier-toast" role="status" aria-live="polite" hidden></div>
+  <footer id="site-footer"></footer>
+  <script type="module" src="/assets/js/site.js"></script>
+  <script type="module" src="/assets/js/design.js"></script>
+</body>
+
+</html>

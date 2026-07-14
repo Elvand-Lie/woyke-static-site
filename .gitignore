@@ -20,3 +20,5 @@ screenshots/
 *.log
 .env
 .env.local
+
+.vercel
