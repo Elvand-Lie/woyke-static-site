@@ -288,6 +288,41 @@ function setSelection(stepId, value) {
   render();
 }
 
+function ensureGuideDialog() {
+  let dialog = document.querySelector('#atelier-guide-dialog');
+  if (dialog) return dialog;
+
+  dialog = document.createElement('dialog');
+  dialog.id = 'atelier-guide-dialog';
+  dialog.className = 'atelier-guide-dialog';
+  dialog.setAttribute('aria-label', t('Size guide', '尺寸指南'));
+  dialog.innerHTML = `
+    <div class="atelier-guide-dialog-inner">
+      <button class="atelier-guide-dialog-close" type="button" aria-label="${t('Close size guide', '关闭尺寸指南')}">×</button>
+      <img class="atelier-guide-dialog-image" alt="">
+      <p class="atelier-guide-dialog-caption"></p>
+    </div>
+  `;
+
+  dialog.querySelector('.atelier-guide-dialog-close')?.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+  document.body.append(dialog);
+  return dialog;
+}
+
+function openGuideDialog(src, alt, caption) {
+  const dialog = ensureGuideDialog();
+  const image = dialog.querySelector('.atelier-guide-dialog-image');
+  const captionNode = dialog.querySelector('.atelier-guide-dialog-caption');
+  image.src = src;
+  image.alt = alt;
+  captionNode.textContent = caption || '';
+  if (typeof dialog.showModal === 'function') dialog.showModal();
+  else window.open(src, '_blank', 'noopener,noreferrer');
+}
+
 function renderGuide(step) {
   const guide = step?.guide;
   els.guide.innerHTML = '';
@@ -297,18 +332,40 @@ function renderGuide(step) {
   }
 
   els.guide.hidden = false;
+  const caption = state.lang === 'cn' ? (guide.textCn || guide.text || '') : (guide.text || '');
+
   for (const src of guide.images || []) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'atelier-guide-media';
+    button.setAttribute('aria-label', t(`Open ${step.name} guide`, `打开${step.nameCn}指南`));
+
     const img = document.createElement('img');
+    const alt = t(`${step.name} guide`, `${step.nameCn}指南`);
     img.src = src;
-    img.alt = t(`${step.name} guide`, `${step.nameCn}指南`);
+    img.alt = alt;
     img.loading = 'lazy';
-    img.addEventListener('error', () => img.remove(), { once: true });
-    els.guide.append(img);
+    img.addEventListener('error', () => button.remove(), { once: true });
+
+    const action = document.createElement('span');
+    action.className = 'atelier-guide-action mono';
+    action.textContent = t('View full guide', '查看完整指南');
+
+    button.append(img, action);
+    button.addEventListener('click', () => openGuideDialog(src, alt, caption));
+    els.guide.append(button);
   }
-  if (guide.text) {
+
+  if (caption) {
+    const copy = document.createElement('div');
+    copy.className = 'atelier-guide-copy';
+    const eyebrow = document.createElement('span');
+    eyebrow.className = 'mono';
+    eyebrow.textContent = t('Size guide', '尺寸指南');
     const p = document.createElement('p');
-    p.textContent = state.lang === 'cn' ? (guide.textCn || guide.text) : guide.text;
-    els.guide.append(p);
+    p.textContent = caption;
+    copy.append(eyebrow, p);
+    els.guide.append(copy);
   }
 }
 
