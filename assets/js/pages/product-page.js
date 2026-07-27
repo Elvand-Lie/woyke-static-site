@@ -19,19 +19,19 @@ if (root) {
         <div class="product-stage-media editorial-product-stage">
           <img id="product-main-image" src="${escapeHtml(images[0])}" alt="${escapeHtml(product.name)}">
           <div class="product-thumbs" aria-label="Product views">${images.map((src, index) => `<button class="product-thumb" aria-selected="${index === 0}" data-image="${escapeHtml(src)}" data-alt="${escapeHtml(`${product.name} view ${index + 1}`)}"><img src="${escapeHtml(src)}" alt=""></button>`).join('')}</div>
-          <div class="product-image-label mono">${media.isCurated ? 'CURATED JEWELLERY STUDY' : 'ATELIER CATEGORY STUDY'}</div>
+
         </div>
         <aside class="product-panel">
           <div class="section-kicker">${escapeHtml(product.id)} / ${escapeHtml(categoryName(product.category))}</div>
           <h1>${escapeHtml(product.name)}</h1>
           <p class="product-price">From ${formatCurrency(product.basePrice)}</p>
           <p class="lede">${escapeHtml(product.description)}</p>
-          <div class="product-spec-list mono"><div><span>CATEGORY</span><strong>${escapeHtml(categoryName(product.category))}</strong></div><div><span>MATERIALS</span><strong>${escapeHtml(product.materials?.join(', ') || 'Selected in the atelier')}</strong></div><div><span>VISUAL</span><strong>${media.isCurated ? 'CURATED STUDY' : 'CATEGORY STUDY'}</strong></div><div><span>ATELIER</span><strong>PERSONALISE THE DETAILS</strong></div></div>
+          <div class="product-spec-list mono"><div><span>CATEGORY</span><strong>${escapeHtml(categoryName(product.category))}</strong></div><div><span>MATERIALS</span><strong>${escapeHtml(product.materials?.join(', ') || 'Selected in the atelier')}</strong></div><div><span>ATELIER</span><strong>PERSONALISE THE DETAILS</strong></div></div>
           <div class="btn-row"><a class="btn btn-light" href="/design/?product=${encodeURIComponent(product.slug)}"><span>Design this piece</span><span>+</span></a><button class="btn btn-secondary" id="add-base-product" type="button"><span>Add base design</span></button></div>
           <p id="product-status" class="prototype-note" role="status">Use this study as a starting point, then shape the details in the digital atelier.</p>
         </aside>
       </section>
-      <section class="scene scene-ivory" data-header-theme="light"><div class="container product-story-v3"><div class="product-story-copy reveal"><div class="section-kicker">A starting point</div><h2 class="display-md">Keep the form.<br>Change the story.</h2><p class="lede">Every catalogue piece opens into the same guided atelier, with the product, price and chosen specification carried through to the bag.</p></div><figure class="product-story-image reveal"><img src="${escapeHtml(productImage(product))}" alt="${escapeHtml(product.name)}"><figcaption class="mono">${media.isCurated ? 'CURATED JEWELLERY STUDY' : 'ATELIER CATEGORY STUDY'}</figcaption></figure></div></section>`;
+      `;
     root.querySelectorAll('img').forEach((image) => image.addEventListener('error', () => {
       image.closest('.product-thumb')?.remove();
       if (image.id === 'product-main-image') image.closest('.product-stage-media')?.classList.add('media-unavailable');
