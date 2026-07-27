@@ -764,6 +764,7 @@ main { min-height: 100vh; }
 /* Complete static commerce architecture */
 .text-button { border:0;background:transparent;padding:0;text-decoration:underline;cursor:pointer;color:inherit;font-size:12px; }
 .demo-credentials { display:grid;gap:6px;padding:16px 0 20px;border-top:1px solid var(--line-light);border-bottom:1px solid var(--line-light);margin:22px 0; }
+body[data-page="auth"] .site-nav,body[data-page="auth"] .header-actions{display:none}
 .auth-shell { min-height:100svh;display:grid;grid-template-columns:1.08fr .92fr;background:var(--ink);color:var(--ivory); }
 .auth-media { position:relative;min-height:100svh;overflow:hidden; }
 .auth-media > img { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%; }
