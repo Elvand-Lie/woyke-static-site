@@ -14,7 +14,7 @@ if (header) {
       <a href="/consultation/" data-nav="consultation">Consultation</a>
     </nav>
     <div class="header-actions">
-      <button class="language-button" type="button" aria-label="Language prototype">中文</button>
+      <button class="language-button" type="button" aria-label="Switch language">中文</button>
       <a class="icon-button" href="/account/" aria-label="Open account">○</a>
       <a class="icon-button" href="/cart/" aria-label="Open shopping bag">◇</a>
       <button class="icon-button menu-button" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
@@ -58,9 +58,9 @@ if (footer) {
       </div>
       <div class="footer-col"><h3>Shop</h3><a href="/shop/">Rings</a><a href="/shop/">Earrings</a><a href="/shop/">Necklaces</a><a href="/shop/">Bracelets</a></div>
       <div class="footer-col"><h3>Atelier</h3><a href="/design/">Design your own</a><a href="/craft/">Craft process</a><a href="/materials/">Materials</a></div>
-      <div class="footer-col"><h3>Client care</h3><a href="/consultation/">Consultation</a><a href="/account/">Your account</a><a href="/checkout/">Checkout demo</a><a href="/auth/">Sign in</a></div>
+      <div class="footer-col"><h3>Client care</h3><a href="/consultation/">Consultation</a><a href="/account/">Your account</a><a href="/checkout/">Checkout</a><a href="/auth/">Sign in</a></div>
     </div>
-    <div class="footer-bottom"><span>© 2026 WOYKE — static visual prototype</span><span>i am, we are.</span></div>`
+    <div class="footer-bottom"><span>© 2026 WOYKE — i am, we are.</span><span>i am, we are.</span></div>`
 }
 
 if (header) {
@@ -86,8 +86,11 @@ const videoObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     const video = entry.target
     if (!(video instanceof HTMLVideoElement)) return
-    if (entry.isIntersecting && video.dataset.autoplay === 'true') video.play().catch(() => {})
-    if (!entry.isIntersecting) video.pause()
+    if (entry.isIntersecting && video.dataset.autoplay === 'true' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll('video').forEach((other) => { if (other !== video) other.pause() })
+      video.play().catch(() => {})
+    }
+    if (!entry.isIntersecting || window.matchMedia('(prefers-reduced-motion: reduce)').matches) video.pause()
   })
 }, { threshold: .22 })
 document.querySelectorAll('video').forEach(video => videoObserver.observe(video))
@@ -110,7 +113,7 @@ const languageButton = document.querySelector('.language-button')
 languageButton?.addEventListener('click', () => {
   const current = languageButton.textContent.trim()
   languageButton.textContent = current === '中文' ? 'EN' : '中文'
-  languageButton.setAttribute('aria-label','Localization demonstration only')
+  languageButton.setAttribute('aria-label','Switch language')
 })
 
 const cartRemove = document.querySelector('.cart-actions button')

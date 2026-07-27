@@ -1,19 +1,25 @@
-# Validation Report
+# Validation report
 
-## Completed checks
+## Automated checks
 
-- 16 HTML files parsed and all local `src`, `href` and `poster` references resolved.
-- Shared and page-specific JavaScript passed `node --check`.
-- The built-in Node server returned HTTP 200 for every public route.
-- All included videos use browser-compatible H.264 video.
-- No npm install, package registry, external font request, Three.js, WebGL or shader runtime is required.
-- Desktop screenshots were rendered for the homepage, shop, product, configurator, materials, authentication and checkout pages.
-- Mobile screenshots were rendered for the homepage, configurator and checkout.
+Run:
 
-## Prototype limitations
+```powershell
+node .\scripts\validate.mjs
+node .\scripts\state-smoke.mjs
+Get-ChildItem .\assets\js -Recurse -Filter *.js | ForEach-Object { node --check $_.FullName }
+```
 
-- Product, price and inventory data are illustrative.
-- Authentication, OTP, payments, orders and saved designs are simulated.
-- The configurator changes among available photographic studies rather than rendering every possible combination.
-- Environmental and sourcing copy requires client evidence and approval.
-- Generated lifestyle imagery should be replaced by client-approved campaign photography before production.
+The repository validator checks routes, HTML asset references, sizing guides, forbidden local paths, and prohibited 3D/WebGL dependencies. On the restricted Windows sandbox, nested process spawning is unavailable and is reported as a warning; the direct `node --check` loop is the authoritative syntax check.
+
+## Browser acceptance completed
+
+- Direct refresh for all required routes, valid/invalid product and share states
+- Catalogue query persistence, category filter, search, sort and count
+- Configurator completion, branch change, exact/fallback labels and sizing dialog keyboard behavior
+- Persistent bag, sign-in return, checkout validation, immutable order, confirmation refresh and order history
+- Saved design, duplicate, public share while signed out, and consultation receipt
+- No console errors on the 18-route smoke matrix
+- No horizontal overflow at 375x812, 768x1024, 1024x768 and 1440x900 on primary routes
+
+See `docs/STATUS.md` for the full handoff record and known production boundaries.

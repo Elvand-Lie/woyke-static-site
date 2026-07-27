@@ -1,0 +1,3311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WOYKE_Static_HTML_Luxury_V3 — Complete Call Flow &amp; Architecture Documentation</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a; --surface: #1e293b; --border: #334155;
+  --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8;
+  --warn: #fbbf24; --err: #f87171; --ok: #34d399;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+.container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+h1 { font-size: 2.4rem; margin-bottom: 8px; background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+h2 { font-size: 1.7rem; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h3 { font-size: 1.25rem; margin: 32px 0 12px; color: var(--accent); }
+h4 { font-size: 1.05rem; margin: 20px 0 8px; color: var(--warn); }
+p { margin: 8px 0; color: var(--muted); }
+.subtitle { color: var(--muted); font-size: 1.1rem; margin-bottom: 32px; }
+.mermaid { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; overflow-x: auto; position: relative; }
+.mermaid.is-enhanced { padding: 0; overflow: hidden; min-height: 260px; }
+.mermaid-viewport { padding: 54px 24px 24px; overflow: hidden; cursor: grab; touch-action: none; min-height: 260px; }
+.mermaid-viewport.is-dragging { cursor: grabbing; }
+.mermaid-viewport svg { max-width: none !important; height: auto; transform-origin: 0 0; transition: transform 120ms ease; }
+.mermaid-toolbar { position: absolute; top: 10px; right: 10px; z-index: 3; display: flex; align-items: center; gap: 6px; padding: 6px; background: rgba(15,23,42,0.92); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.28); }
+.mermaid-toolbar button, .mermaid-toolbar .zoom-level { height: 28px; min-width: 32px; border: 1px solid var(--border); border-radius: 6px; background: #1e293b; color: var(--text); font: 600 0.78rem system-ui, sans-serif; display: inline-flex; align-items: center; justify-content: center; }
+.mermaid-toolbar button { cursor: pointer; }
+.mermaid-toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+.mermaid-toolbar .zoom-level { min-width: 52px; color: var(--muted); background: transparent; }
+.call-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+.call-table th { background: #1a2744; color: var(--accent); text-align: left; padding: 10px 14px; border: 1px solid var(--border); }
+.call-table td { padding: 8px 14px; border: 1px solid var(--border); vertical-align: top; }
+.call-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+.tag-async { background: #7c3aed33; color: #a78bfa; }
+.tag-class { background: #05966933; color: var(--ok); }
+.tag-func { background: #2563eb33; color: var(--accent); }
+.tag-cmd { background: #d9770633; color: var(--warn); }
+.tag-endpoint { background: #dc262633; color: var(--err); }
+.tag-hook { background: #db277733; color: #f472b6; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 16px 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin: 16px 0; }
+.arrow-chain { font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--accent); padding: 10px; background: rgba(56,189,248,0.06); border-radius: 6px; }
+code { font-family: 'Fira Code', 'Cascadia Code', monospace; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 3px; font-size: 0.88em; }
+ul, ol { margin: 8px 0 8px 24px; color: var(--muted); }
+li { margin: 4px 0; }
+a { color: var(--accent); }
+hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+.nav { position: sticky; top: 0; background: var(--bg); z-index: 10; padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.9rem; }
+.nav a { text-decoration: none; }
+.nav a:hover { text-decoration: underline; }
+@media (max-width: 768px) { .container { padding: 16px; } h1 { font-size: 1.8rem; } }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>WOYKE_Static_HTML_Luxury_V3 — Complete Call Flow &amp; Architecture Documentation</h1>
+<p class="subtitle">Generated from graphify knowledge graph: 312 nodes, 555 edges, 13 communities. Commit: 406657d</p>
+
+<div class="nav">
+    <a href="#overview">Architecture Overview</a>
+    <a href="#configurator-optionsjs-occasionstep">Configurator Optionsjs Occasionstep</a>
+    <a href="#designjs-configurator-optionsjs">Designjs Configurator Optionsjs</a>
+    <a href="#pagejs-pages-consultation">Pagejs Pages Consultation</a>
+    <a href="#homejs-occasiondata-occasionstage">Homejs Occasiondata Occasionstage</a>
+    <a href="#pagejs-pages-cart">Pagejs Pages Cart</a>
+    <a href="#sitejs-header-mobilemenu">Sitejs Header Mobilemenu</a>
+    <a href="#pagejs-pages-orders">Pagejs Pages Orders</a>
+    <a href="#checkout-pagejs-pages">Checkout Pagejs Pages</a>
+    <a href="#utilsjs-app-configurationjs">Utilsjs App Configurationjs</a>
+    <a href="#repositoriesjs-repositories-designs">Repositoriesjs Repositories Designs</a>
+    <a href="#storagejs-repositories-nowiso">Storagejs Repositories Nowiso</a>
+    <a href="#auth-pagejs-pages">Auth Pagejs Pages</a>
+    <a href="#share-pagejs-pages">Share Pagejs Pages</a>
+</div>
+
+<!-- ====== Architecture Overview ====== -->
+<h2 id="overview">1. Architecture Overview</h2>
+
+<div class="mermaid">
+
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    CONFIGURATOR_OPTIONSJS_OCCASIONSTEP_4A341FE8("Configurator Optionsjs Occasionstep<br/><small>72 nodes</small>")
+    class CONFIGURATOR_OPTIONSJS_OCCASIONSTEP_4A341FE8 module;
+    DESIGNJS_CONFIGURATOR_OPTIONSJS_90510E04("Designjs Configurator Optionsjs<br/><small>60 nodes</small>")
+    class DESIGNJS_CONFIGURATOR_OPTIONSJS_90510E04 module;
+    PAGEJS_PAGES_CONSULTATION_FA995965("Pagejs Pages Consultation<br/><small>46 nodes</small>")
+    class PAGEJS_PAGES_CONSULTATION_FA995965 module;
+    HOMEJS_OCCASIONDATA_OCCASIONSTAGE_239D61B9("Homejs Occasiondata Occasionstage<br/><small>25 nodes</small>")
+    class HOMEJS_OCCASIONDATA_OCCASIONSTAGE_239D61B9 module;
+    PAGEJS_PAGES_CART_384642DB("Pagejs Pages Cart<br/><small>18 nodes</small>")
+    class PAGEJS_PAGES_CART_384642DB module;
+    SITEJS_HEADER_MOBILEMENU_457A8096("Sitejs Header Mobilemenu<br/><small>16 nodes</small>")
+    class SITEJS_HEADER_MOBILEMENU_457A8096 module;
+    PAGEJS_PAGES_ORDERS_B670EE99("Pagejs Pages Orders<br/><small>13 nodes</small>")
+    class PAGEJS_PAGES_ORDERS_B670EE99 module;
+    CHECKOUT_PAGEJS_PAGES_C83C2A93("Checkout Pagejs Pages<br/><small>12 nodes</small>")
+    class CHECKOUT_PAGEJS_PAGES_C83C2A93 module;
+    UTILSJS_APP_CONFIGURATIONJS_A54E11B7("Utilsjs App Configurationjs<br/><small>12 nodes</small>")
+    class UTILSJS_APP_CONFIGURATIONJS_A54E11B7 module;
+    REPOSITORIESJS_REPOSITORIES_DESIGNS_8C3F196D("Repositoriesjs Repositories Designs<br/><small>11 nodes</small>")
+    class REPOSITORIESJS_REPOSITORIES_DESIGNS_8C3F196D module;
+    STORAGEJS_REPOSITORIES_NOWISO_E9D08D1B("Storagejs Repositories Nowiso<br/><small>10 nodes</small>")
+    class STORAGEJS_REPOSITORIES_NOWISO_E9D08D1B module;
+    AUTH_PAGEJS_PAGES_876BAAC5("Auth Pagejs Pages<br/><small>10 nodes</small>")
+    class AUTH_PAGEJS_PAGES_876BAAC5 module;
+    SHARE_PAGEJS_PAGES_B7CB2788("Share Pagejs Pages<br/><small>7 nodes</small>")
+    class SHARE_PAGEJS_PAGES_B7CB2788 module;
+    REPOSITORIESJS_REPOSITORIES_DESIGNS_8C3F196D -->|imports x7| UTILSJS_APP_CONFIGURATIONJS_A54E11B7
+    PAGEJS_PAGES_CART_384642DB -->|imports x6| PAGEJS_PAGES_ORDERS_B670EE99
+    REPOSITORIESJS_REPOSITORIES_DESIGNS_8C3F196D -->|imports x6| STORAGEJS_REPOSITORIES_NOWISO_E9D08D1B
+    DESIGNJS_CONFIGURATOR_OPTIONSJS_90510E04 -->|calls x5| STORAGEJS_REPOSITORIES_NOWISO_E9D08D1B
+    PAGEJS_PAGES_CONSULTATION_FA995965 -->|imports x5| PAGEJS_PAGES_ORDERS_B670EE99
+    UTILSJS_APP_CONFIGURATIONJS_A54E11B7 -->|contains x5| PAGEJS_PAGES_ORDERS_B670EE99
+    PAGEJS_PAGES_CART_384642DB -->|imports x5| UTILSJS_APP_CONFIGURATIONJS_A54E11B7
+    CHECKOUT_PAGEJS_PAGES_C83C2A93 -->|imports x5| UTILSJS_APP_CONFIGURATIONJS_A54E11B7
+    PAGEJS_PAGES_CONSULTATION_FA995965 -->|imports x5| UTILSJS_APP_CONFIGURATIONJS_A54E11B7
+    REPOSITORIESJS_REPOSITORIES_DESIGNS_8C3F196D -->|imports x5| PAGEJS_PAGES_ORDERS_B670EE99
+    CONFIGURATOR_OPTIONSJS_OCCASIONSTEP_4A341FE8 -->|contains x4| DESIGNJS_CONFIGURATOR_OPTIONSJS_90510E04
+    DESIGNJS_CONFIGURATOR_OPTIONSJS_90510E04 -->|imports x4| PAGEJS_PAGES_CONSULTATION_FA995965
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h4>Architecture Layers</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>Layer</th><th>Nodes</th><th>Communities</th></tr>
+      <tr><td>Configurator Optionsjs Occasionstep</td><td>72</td><td><code>0</code></td></tr><tr><td>Designjs Configurator Optionsjs</td><td>60</td><td><code>1</code></td></tr><tr><td>Pagejs Pages Consultation</td><td>46</td><td><code>2</code></td></tr><tr><td>Homejs Occasiondata Occasionstage</td><td>25</td><td><code>3</code></td></tr><tr><td>Pagejs Pages Cart</td><td>18</td><td><code>4</code></td></tr><tr><td>Sitejs Header Mobilemenu</td><td>16</td><td><code>5</code></td></tr><tr><td>Pagejs Pages Orders</td><td>13</td><td><code>6</code></td></tr><tr><td>Checkout Pagejs Pages</td><td>12</td><td><code>7</code></td></tr><tr><td>Utilsjs App Configurationjs</td><td>12</td><td><code>8</code></td></tr><tr><td>Repositoriesjs Repositories Designs</td><td>11</td><td><code>9</code></td></tr><tr><td>Storagejs Repositories Nowiso</td><td>10</td><td><code>10</code></td></tr><tr><td>Auth Pagejs Pages</td><td>10</td><td><code>11</code></td></tr><tr><td>Share Pagejs Pages</td><td>7</td><td><code>12</code></td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Core Flow</h4>
+    <div class="arrow-chain">Homejs Occasiondata Occasionstage -&gt; Configurator Optionsjs Occasionstep -&gt; Designjs Configurator Optionsjs -&gt; Storagejs Repositories Nowiso -&gt; Utilsjs App Configurationjs -&gt; Pagejs Pages Orders -&gt; Pagejs Pages Cart</div>
+  </div>
+</div>
+<div class="grid">
+  <div class="card">
+    <h4>Graph Report Highlights</h4>
+    <ul>
+      <li>312 nodes · 555 edges · 13 communities</li>
+      <li>Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS</li>
+      <li>Token cost: 0 input · 0 output</li>
+      <li>1. `t()` - 15 edges</li>
+      <li>2. `escapeHtml()` - 13 edges</li>
+      <li>3. `getActiveConfigSteps()` - 12 edges</li>
+    </ul>
+  </div>
+</div>
+<hr>
+<!-- ====== 2. Configurator Optionsjs Occasionstep ====== -->
+<h2 id="configurator-optionsjs-occasionstep">2. Configurator Optionsjs Occasionstep</h2>
+<p>Configurator Optionsjs Occasionstep groups implementation around configurator, optionsjs, occasionstep, categorystep, mostly in configurator-options.js. This section covers 72 nodes and 71 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Configurator Optionsjs Occasionstep (72 nodes, 71 edges)
+    configurator_options_js_a981e0ff("configurator-options.js")
+    js_configurator_options_occasionstep_59cadf9d("occasionStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_categorystep_50e0d5c5("categoryStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_interchangeabilitystep_735b055c("interchangeabilityStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_stonestep_71873d51("stoneStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_stoneshapestep_afd46cde("stoneShapeStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_stonesizestep_8e52d4f5("stoneSizeStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_sidestonestep_ec2ba5a1("sideStoneStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_sidestoneshapestep_cd8b5cae("sideStoneShapeStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_addsecondsidestonestep_96979efb("addSecondSideStoneStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_sidestone2step_aabfcfa4("sideStone2Step<br/><small>configurator-options.js</small>")
+    js_configurator_options_sidestone2shapestep_d1d66505("sideStone2ShapeStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_metalstep_59213d48("metalStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_colourstep_211adf02("colourStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_ringsubtypestep_083a8d34("ringSubTypeStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_ringbandprofilestep_b62f52d1("ringBandProfileStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_ringbandthicknessstep_69c97c89("ringBandThicknessStep<br/><small>configurator-options.js</small>")
+    js_configurator_options_ringsurfacefinishstep_b3bad252("ringSurfaceFinishStep<br/><small>configurator-options.js</small>")
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_occasionstep_59cadf9d
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_categorystep_50e0d5c5
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_interchangeabilitystep_735b055c
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_stonestep_71873d51
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_stoneshapestep_afd46cde
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_stonesizestep_8e52d4f5
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_sidestonestep_ec2ba5a1
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_sidestoneshapestep_cd8b5cae
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_addsecondsidestonestep_96979efb
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_sidestone2step_aabfcfa4
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_sidestone2shapestep_d1d66505
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_metalstep_59213d48
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_colourstep_211adf02
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_ringsubtypestep_083a8d34
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_ringbandprofilestep_b62f52d1
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_ringbandthicknessstep_69c97c89
+    configurator_options_js_a981e0ff -->|contains| js_configurator_options_ringsurfacefinishstep_b3bad252
+    %% Omitted for readability: 54 nodes, 0 edges
+    class configurator_options_js_a981e0ff module;
+    class js_configurator_options_occasionstep_59cadf9d function;
+    class js_configurator_options_categorystep_50e0d5c5 function;
+    class js_configurator_options_interchangeabilitystep_735b055c function;
+    class js_configurator_options_stonestep_71873d51 function;
+    class js_configurator_options_stoneshapestep_afd46cde function;
+    class js_configurator_options_stonesizestep_8e52d4f5 function;
+    class js_configurator_options_sidestonestep_ec2ba5a1 function;
+    class js_configurator_options_sidestoneshapestep_cd8b5cae function;
+    class js_configurator_options_addsecondsidestonestep_96979efb function;
+    class js_configurator_options_sidestone2step_aabfcfa4 function;
+    class js_configurator_options_sidestone2shapestep_d1d66505 function;
+    class js_configurator_options_metalstep_59213d48 function;
+    class js_configurator_options_colourstep_211adf02 function;
+    class js_configurator_options_ringsubtypestep_083a8d34 function;
+    class js_configurator_options_ringbandprofilestep_b62f52d1 function;
+    class js_configurator_options_ringbandthicknessstep_69c97c89 function;
+    class js_configurator_options_ringsurfacefinishstep_b3bad252 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>configurator-options.js</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>occasionStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>occasionStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>categoryStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>categoryStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>interchangeabilityStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>interchangeabilityStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>stoneStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>stoneStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>stoneShapeStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>stoneShapeStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>stoneSizeStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>stoneSizeStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>sideStoneStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>sideStoneStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>sideStoneShapeStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>sideStoneShapeStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>addSecondSideStoneStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>addSecondSideStoneStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>sideStone2Step</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>sideStone2Step node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>sideStone2ShapeStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>sideStone2ShapeStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>metalStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>metalStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>colourStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>colourStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>ringSubTypeStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>ringSubTypeStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>ringBandProfileStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>ringBandProfileStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>ringBandThicknessStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>ringBandThicknessStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>ringSurfaceFinishStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>ringSurfaceFinishStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>ringMainSettingStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>ringMainSettingStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>ringSideSettingStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>ringSideSettingStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>ringSizeStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>ringSizeStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>studSettingStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>studSettingStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>studBackingStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>studBackingStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>studBackingSizeStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>studBackingSizeStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>danglingDropStyleStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>danglingDropStyleStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>danglingSettingStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>danglingSettingStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>danglingSideSettingStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>danglingSideSettingStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>danglingConnectionStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>danglingConnectionStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>pendantStyleStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>pendantStyleStep node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>pendantSettingStep</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>pendantSettingStep node in configurator-options.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>configurator-options.js</code></td><td>72 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x71. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 3. Designjs Configurator Optionsjs ====== -->
+<h2 id="designjs-configurator-optionsjs">3. Designjs Configurator Optionsjs</h2>
+<p>Designjs Configurator Optionsjs groups implementation around designjs, configurator, optionsjs, previewjs, mostly in design.js, configurator-options.js, configurator-preview.js. This section covers 60 nodes and 143 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Designjs Configurator Optionsjs (60 nodes, 143 edges)
+    subgraph designjs_configurator_optionsjs_design_js_b890db31["design.js"]
+        js_design_renderstep_8274aada("renderStep()<br/><small>design.js</small>")
+        design_js_f303468e("design.js")
+        js_design_renderpreview_e574f88f("renderPreview()<br/><small>design.js</small>")
+        js_design_rendersummary_3d811056("renderSummary()<br/><small>design.js</small>")
+        js_design_gonext_15c46550("goNext()<br/><small>design.js</small>")
+        js_design_savedesign_20df8845("saveDesign()<br/><small>design.js</small>")
+        js_design_getfilteredoptions_7ad7ac9e("getFilteredOptions()<br/><small>design.js</small>")
+        js_design_getactiveconfigsteps_9cb6129f("getActiveConfigSteps()<br/><small>design.js</small>")
+        js_design_getcurrentstep_d2e05275("getCurrentStep()<br/><small>design.js</small>")
+        js_design_getcurrentindex_3c4e6ce9("getCurrentIndex()<br/><small>design.js</small>")
+        js_design_removeinactiveselections_5e90668a("removeInactiveSelections()<br/><small>design.js</small>")
+        js_design_selectionlabel_e46f1977("selectionLabel()<br/><small>design.js</small>")
+        js_design_calculateprice_9dfae14d("calculatePrice()<br/><small>design.js</small>")
+        js_design_buildnarrative_3a999bfb("buildNarrative()<br/><small>design.js</small>")
+        js_design_t_49f05ae1("t()<br/><small>design.js</small>")
+    end
+    subgraph designjs_configurator_optionsjs_configurator_opt_3ac8cf50["configurator-options.js"]
+        js_configurator_options_getsizingoptions_6afbdc6c("getSizingOptions()<br/><small>configurator-options.js</small>")
+        js_configurator_options_getactivesteps_9bfe049d("getActiveSteps()<br/><small>configurator-options.js</small>")
+        js_configurator_options_getstepbyid_caef7587("getStepById()<br/><small>configurator-options.js</small>")
+    end
+    js_design_getfilteredoptions_7ad7ac9e -->|calls| js_configurator_options_getsizingoptions_6afbdc6c
+    js_design_getactiveconfigsteps_9cb6129f -->|calls| js_configurator_options_getactivesteps_9bfe049d
+    js_design_getcurrentstep_d2e05275 -->|calls| js_design_getactiveconfigsteps_9cb6129f
+    js_design_getcurrentstep_d2e05275 -->|calls| js_design_getcurrentindex_3c4e6ce9
+    js_design_removeinactiveselections_5e90668a -->|calls| js_design_getactiveconfigsteps_9cb6129f
+    js_design_selectionlabel_e46f1977 -->|calls| js_configurator_options_getstepbyid_caef7587
+    js_design_calculateprice_9dfae14d -->|calls| js_design_getactiveconfigsteps_9cb6129f
+    js_design_buildnarrative_3a999bfb -->|calls| js_design_selectionlabel_e46f1977
+    js_design_buildnarrative_3a999bfb -->|calls| js_design_t_49f05ae1
+    js_design_renderstep_8274aada -->|calls| js_design_getactiveconfigsteps_9cb6129f
+    js_design_renderstep_8274aada -->|calls| js_design_getcurrentindex_3c4e6ce9
+    js_design_renderstep_8274aada -->|calls| js_design_t_49f05ae1
+    js_design_rendersummary_3d811056 -->|calls| js_design_getactiveconfigsteps_9cb6129f
+    js_design_rendersummary_3d811056 -->|calls| js_design_selectionlabel_e46f1977
+    js_design_rendersummary_3d811056 -->|calls| js_design_t_49f05ae1
+    js_design_rendersummary_3d811056 -->|calls| js_design_calculateprice_9dfae14d
+    js_design_rendersummary_3d811056 -->|calls| js_design_buildnarrative_3a999bfb
+    js_design_renderpreview_e574f88f -->|calls| js_design_getcurrentstep_d2e05275
+    js_design_renderpreview_e574f88f -->|calls| js_design_t_49f05ae1
+    js_design_renderpreview_e574f88f -->|calls| js_design_selectionlabel_e46f1977
+    js_design_gonext_15c46550 -->|calls| js_design_getactiveconfigsteps_9cb6129f
+    js_design_gonext_15c46550 -->|calls| js_design_getcurrentindex_3c4e6ce9
+    js_design_savedesign_20df8845 -->|calls| js_design_t_49f05ae1
+    design_js_f303468e -->|imports| js_configurator_options_getactivesteps_9bfe049d
+    %% Omitted for readability: 42 nodes, 2 edges
+    class js_design_renderstep_8274aada function;
+    class design_js_f303468e module;
+    class js_design_renderpreview_e574f88f function;
+    class js_design_rendersummary_3d811056 function;
+    class js_design_gonext_15c46550 function;
+    class js_design_savedesign_20df8845 function;
+    class js_design_getfilteredoptions_7ad7ac9e function;
+    class js_design_getactiveconfigsteps_9cb6129f function;
+    class js_design_getcurrentstep_d2e05275 function;
+    class js_design_getcurrentindex_3c4e6ce9 function;
+    class js_design_removeinactiveselections_5e90668a function;
+    class js_design_selectionlabel_e46f1977 function;
+    class js_design_calculateprice_9dfae14d function;
+    class js_design_buildnarrative_3a999bfb function;
+    class js_design_t_49f05ae1 function;
+    class js_configurator_options_getsizingoptions_6afbdc6c function;
+    class js_configurator_options_getactivesteps_9bfe049d function;
+    class js_configurator_options_getstepbyid_caef7587 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>configSteps</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>design.js</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>getActiveSteps()</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>design.js</code><br><small style="color:var(--muted)">design.js</small><br><code>getActiveConfigSteps()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>getActiveSteps() node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>getStepById()</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>design.js</code><br><small style="color:var(--muted)">design.js</small><br><code>selectionLabel()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>getStepById() node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>getSizingOptions()</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>design.js</code><br><small style="color:var(--muted)">design.js</small><br><code>getFilteredOptions()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>getSizingOptions() node in configurator-options.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>configurator-preview.js</code><br><small style="color:var(--muted)">configurator-preview.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>design.js</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>resolvePreviewAsset()</code><br><small style="color:var(--muted)">configurator-preview.js</small></td>
+  <td><span class="tag tag-async">Async</span></td>
+  <td><code>design.js</code><br><small style="color:var(--muted)">design.js</small><br><code>resolvePreview()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>resolvePreviewAsset() node in configurator-preview.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>design.js</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>configSteps</code><br><small style="color:var(--muted)">configurator-options.js</small><br><code>configurator-preview.js</code><br><small style="color:var(--muted)">configurator-preview.js</small><br><code>getActiveSteps()</code><br><small style="color:var(--muted)">configurator-options.js</small><br>+4 more</td>
+  <td>design.js node in design.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>INTERCHANGEABILITY_BY_CATEGORY</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>INTERCHANGEABILITY_BY_CATEGORY node in design.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>CATEGORY_FALLBACKS</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>CATEGORY_FALLBACKS node in design.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>els</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>els node in design.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>safeJsonParse()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>safeJsonParse() node in design.js.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>editLineId</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>editLineId node in design.js.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>editDesignId</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>editDesignId node in design.js.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>product</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>product node in design.js.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>state</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>state node in design.js.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>t()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>addToCart()</code><br><small style="color:var(--muted)">design.js</small><br><code>buildNarrative()</code><br><small style="color:var(--muted)">design.js</small><br><code>ensureGuideDialog()</code><br><small style="color:var(--muted)">design.js</small><br>+11 more</td>
+  <td>No direct outbound edge</td>
+  <td>t() node in design.js.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>formatMoney()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>createOptionButton()</code><br><small style="color:var(--muted)">design.js</small><br><code>priceRenderOnly()</code><br><small style="color:var(--muted)">design.js</small><br><code>renderSummary()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>formatMoney() node in design.js.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>getFilteredOptions()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>renderOptions()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><code>getSizingOptions()</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td>getFilteredOptions() node in design.js.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>getActiveConfigSteps()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>calculatePrice()</code><br><small style="color:var(--muted)">design.js</small><br><code>getCurrentStep()</code><br><small style="color:var(--muted)">design.js</small><br><code>goBack()</code><br><small style="color:var(--muted)">design.js</small><br>+7 more</td>
+  <td><code>getActiveSteps()</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>getCurrentIndex()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>getCurrentStep()</code><br><small style="color:var(--muted)">design.js</small><br><code>goBack()</code><br><small style="color:var(--muted)">design.js</small><br><code>goNext()</code><br><small style="color:var(--muted)">design.js</small><br>+1 more</td>
+  <td>No direct outbound edge</td>
+  <td>getCurrentIndex() node in design.js.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>getCurrentStep()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>buildPayload()</code><br><small style="color:var(--muted)">design.js</small><br><code>renderPreview()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><code>getActiveConfigSteps()</code><br><small style="color:var(--muted)">design.js</small><br><code>getCurrentIndex()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>getCurrentStep() node in design.js.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>removeInactiveSelections()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>setSelection()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><code>getActiveConfigSteps()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>removeInactiveSelections() node in design.js.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>selectionLabel()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>buildNarrative()</code><br><small style="color:var(--muted)">design.js</small><br><code>renderPreview()</code><br><small style="color:var(--muted)">design.js</small><br><code>renderSummary()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><code>getStepById()</code><br><small style="color:var(--muted)">configurator-options.js</small></td>
+  <td>selectionLabel() node in design.js.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>calculatePrice()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>buildPayload()</code><br><small style="color:var(--muted)">design.js</small><br><code>priceRenderOnly()</code><br><small style="color:var(--muted)">design.js</small><br><code>renderSummary()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><code>getActiveConfigSteps()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>calculatePrice() node in design.js.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>buildNarrative()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>buildPayload()</code><br><small style="color:var(--muted)">design.js</small><br><code>renderSummary()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><code>selectionLabel()</code><br><small style="color:var(--muted)">design.js</small><br><code>t()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>buildNarrative() node in design.js.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>validateCurrentStep()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>goNext()</code><br><small style="color:var(--muted)">design.js</small><br><code>renderStep()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><code>t()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>validateCurrentStep() node in design.js.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>saveState()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>render()</code><br><small style="color:var(--muted)">design.js</small><br><code>setSelection()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>saveState() node in design.js.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>setSelection()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>getActiveConfigSteps()</code><br><small style="color:var(--muted)">design.js</small><br><code>removeInactiveSelections()</code><br><small style="color:var(--muted)">design.js</small><br><code>render()</code><br><small style="color:var(--muted)">design.js</small><br>+1 more</td>
+  <td>setSelection() node in design.js.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>ensureGuideDialog()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>openGuideDialog()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><code>t()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>ensureGuideDialog() node in design.js.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>openGuideDialog()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>ensureGuideDialog()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td>openGuideDialog() node in design.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>design.js</code></td><td>53 nodes</td></tr>
+<tr><td><code>configurator-options.js</code></td><td>4 nodes</td></tr>
+<tr><td><code>configurator-preview.js</code></td><td>2 nodes</td></tr>
+<tr><td><code>app/utils.js</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: calls x83, contains x53, imports x6, imports x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 4. Pagejs Pages Consultation ====== -->
+<h2 id="pagejs-pages-consultation">4. Pagejs Pages Consultation</h2>
+<p>Pagejs Pages Consultation groups implementation around pagejs, pages, consultation, product, mostly in pages/consultation-page.js, configurator-products.js, pages/product-page.js. This section covers 46 nodes and 61 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Pagejs Pages Consultation (46 nodes, 61 edges)
+    subgraph pagejs_pages_consultation_configurator_products_dfe1429a["configurator-products.js"]
+        js_configurator_products_getproductbyslug_a9151652("getProductBySlug()<br/><small>configurator-products.js</small>")
+        js_configurator_products_products_bd42548b("products<br/><small>configurator-products.js</small>")
+        js_configurator_products_categorylabels_32d5cfc5("categoryLabels<br/><small>configurator-products.js</small>")
+        js_configurator_products_allcategories_16d664bc("allCategories<br/><small>configurator-products.js</small>")
+        configurator_products_js_e6fcbcd4("configurator-products.js")
+        js_configurator_products_getfeaturedproducts_7e775f6b("getFeaturedProducts()<br/><small>configurator-products.js</small>")
+        js_configurator_products_getproductsbycategory_82d0c9d9("getProductsByCategory()<br/><small>configurator-products.js</small>")
+    end
+    subgraph pagejs_pages_consultation_data_catalogue_js_32ed91e7["data/catalogue.js"]
+        data_catalogue_js_e0bfdfaf("catalogue.js")
+        data_catalogue_productimages_86728710("productImages()<br/><small>data/catalogue.js</small>")
+        data_catalogue_productimage_fb5920dd("productImage()<br/><small>data/catalogue.js</small>")
+        data_catalogue_cataloguequery_9a3661d6("catalogueQuery()<br/><small>data/catalogue.js</small>")
+        data_catalogue_categoryname_1da12d91("categoryName()<br/><small>data/catalogue.js</small>")
+    end
+    subgraph pagejs_pages_consultation_pages_shop_page_js_e7f2e7e1["pages/shop-page.js"]
+        pages_shop_page_js_de7e81ed("shop-page.js")
+        pages_shop_page_render_bbe097a2("render()<br/><small>pages/shop-page.js</small>")
+    end
+    js_design_getinitialproduct_a8b28f76("getInitialProduct()<br/><small>design.js</small>")
+    pages_consultation_page_js_eb2d6b32("consultation-page.js")
+    pages_product_page_js_99893432("product-page.js")
+    repositories_repositories_consultationrepository_c71be071("consultationRepository<br/><small>repositories/repositories.js</small>")
+    js_design_getinitialproduct_a8b28f76 -->|calls| js_configurator_products_getproductbyslug_a9151652
+    data_catalogue_productimages_86728710 -->|calls| data_catalogue_productimage_fb5920dd
+    pages_shop_page_render_bbe097a2 -->|calls| data_catalogue_cataloguequery_9a3661d6
+    data_catalogue_js_e0bfdfaf -->|imports| js_configurator_products_products_bd42548b
+    data_catalogue_js_e0bfdfaf -->|imports| js_configurator_products_categorylabels_32d5cfc5
+    data_catalogue_js_e0bfdfaf -->|imports| js_configurator_products_allcategories_16d664bc
+    data_catalogue_js_e0bfdfaf -->|imports| js_configurator_products_getproductbyslug_a9151652
+    pages_consultation_page_js_eb2d6b32 -->|imports| data_catalogue_js_e0bfdfaf
+    pages_consultation_page_js_eb2d6b32 -->|imports| repositories_repositories_consultationrepository_c71be071
+    pages_consultation_page_js_eb2d6b32 -->|imports| js_configurator_products_getproductbyslug_a9151652
+    pages_product_page_js_99893432 -->|imports| data_catalogue_js_e0bfdfaf
+    pages_product_page_js_99893432 -->|imports| data_catalogue_categoryname_1da12d91
+    pages_product_page_js_99893432 -->|imports| data_catalogue_productimage_fb5920dd
+    pages_product_page_js_99893432 -->|imports| data_catalogue_productimages_86728710
+    pages_product_page_js_99893432 -->|imports| js_configurator_products_getproductbyslug_a9151652
+    pages_product_page_js_99893432 -->|imports| js_configurator_products_products_bd42548b
+    pages_shop_page_js_de7e81ed -->|imports| data_catalogue_js_e0bfdfaf
+    pages_shop_page_js_de7e81ed -->|imports| data_catalogue_cataloguequery_9a3661d6
+    pages_shop_page_js_de7e81ed -->|imports| data_catalogue_categoryname_1da12d91
+    pages_shop_page_js_de7e81ed -->|imports| data_catalogue_productimage_fb5920dd
+    pages_shop_page_js_de7e81ed -->|imports| js_configurator_products_allcategories_16d664bc
+    %% Omitted for readability: 28 nodes, 0 edges
+    class js_configurator_products_getproductbyslug_a9151652 function;
+    class js_configurator_products_products_bd42548b function;
+    class js_configurator_products_categorylabels_32d5cfc5 function;
+    class js_configurator_products_allcategories_16d664bc function;
+    class configurator_products_js_e6fcbcd4 module;
+    class js_configurator_products_getfeaturedproducts_7e775f6b function;
+    class js_configurator_products_getproductsbycategory_82d0c9d9 function;
+    class data_catalogue_js_e0bfdfaf module;
+    class data_catalogue_productimages_86728710 function;
+    class data_catalogue_productimage_fb5920dd function;
+    class data_catalogue_cataloguequery_9a3661d6 function;
+    class data_catalogue_categoryname_1da12d91 function;
+    class pages_shop_page_js_de7e81ed module;
+    class pages_shop_page_render_bbe097a2 function;
+    class js_design_getinitialproduct_a8b28f76 function;
+    class pages_consultation_page_js_eb2d6b32 module;
+    class pages_product_page_js_99893432 module;
+    class repositories_repositories_consultationrepository_c71be071 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>configurator-products.js</code><br><small style="color:var(--muted)">configurator-products.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>categoryLabels</code><br><small style="color:var(--muted)">configurator-products.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>catalogue.js</code><br><small style="color:var(--muted)">data/catalogue.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>categoryLabels node in configurator-products.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>allCategories</code><br><small style="color:var(--muted)">configurator-products.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>catalogue.js</code><br><small style="color:var(--muted)">data/catalogue.js</small><br><code>shop-page.js</code><br><small style="color:var(--muted)">pages/shop-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>allCategories node in configurator-products.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>products</code><br><small style="color:var(--muted)">configurator-products.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>catalogue.js</code><br><small style="color:var(--muted)">data/catalogue.js</small><br><code>product-page.js</code><br><small style="color:var(--muted)">pages/product-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>products node in configurator-products.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>getProductBySlug()</code><br><small style="color:var(--muted)">configurator-products.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>catalogue.js</code><br><small style="color:var(--muted)">data/catalogue.js</small><br><code>consultation-page.js</code><br><small style="color:var(--muted)">pages/consultation-page.js</small><br><code>getInitialProduct()</code><br><small style="color:var(--muted)">design.js</small><br>+1 more</td>
+  <td>No direct outbound edge</td>
+  <td>getProductBySlug() node in configurator-products.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>getProductsByCategory()</code><br><small style="color:var(--muted)">configurator-products.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>getProductsByCategory() node in configurator-products.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>getFeaturedProducts()</code><br><small style="color:var(--muted)">configurator-products.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>getFeaturedProducts() node in configurator-products.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>getProductsByOccasion()</code><br><small style="color:var(--muted)">configurator-products.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>getProductsByOccasion() node in configurator-products.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>searchProducts()</code><br><small style="color:var(--muted)">configurator-products.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>searchProducts() node in configurator-products.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>getInitialProduct()</code><br><small style="color:var(--muted)">design.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>getProductBySlug()</code><br><small style="color:var(--muted)">configurator-products.js</small></td>
+  <td>getInitialProduct() node in design.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>catalogue.js</code><br><small style="color:var(--muted)">data/catalogue.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>consultation-page.js</code><br><small style="color:var(--muted)">pages/consultation-page.js</small><br><code>product-page.js</code><br><small style="color:var(--muted)">pages/product-page.js</small><br><code>shop-page.js</code><br><small style="color:var(--muted)">pages/shop-page.js</small></td>
+  <td><code>allCategories</code><br><small style="color:var(--muted)">configurator-products.js</small><br><code>categoryLabels</code><br><small style="color:var(--muted)">configurator-products.js</small><br><code>getProductBySlug()</code><br><small style="color:var(--muted)">configurator-products.js</small><br>+1 more</td>
+  <td>catalogue.js node in data/catalogue.js.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>FALLBACKS</code><br><small style="color:var(--muted)">data/catalogue.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>FALLBACKS node in data/catalogue.js.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>productImage()</code><br><small style="color:var(--muted)">data/catalogue.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>product-page.js</code><br><small style="color:var(--muted)">pages/product-page.js</small><br><code>productImages()</code><br><small style="color:var(--muted)">data/catalogue.js</small><br><code>shop-page.js</code><br><small style="color:var(--muted)">pages/shop-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>productImage() node in data/catalogue.js.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>productImages()</code><br><small style="color:var(--muted)">data/catalogue.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>product-page.js</code><br><small style="color:var(--muted)">pages/product-page.js</small></td>
+  <td><code>productImage()</code><br><small style="color:var(--muted)">data/catalogue.js</small></td>
+  <td>productImages() node in data/catalogue.js.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>categoryName()</code><br><small style="color:var(--muted)">data/catalogue.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>product-page.js</code><br><small style="color:var(--muted)">pages/product-page.js</small><br><code>shop-page.js</code><br><small style="color:var(--muted)">pages/shop-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>categoryName() node in data/catalogue.js.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>catalogueQuery()</code><br><small style="color:var(--muted)">data/catalogue.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>render()</code><br><small style="color:var(--muted)">pages/shop-page.js</small><br><code>shop-page.js</code><br><small style="color:var(--muted)">pages/shop-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>catalogueQuery() node in data/catalogue.js.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>consultation-page.js</code><br><small style="color:var(--muted)">pages/consultation-page.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>catalogue.js</code><br><small style="color:var(--muted)">data/catalogue.js</small><br><code>consultationRepository</code><br><small style="color:var(--muted)">repositories/repositories.js</small><br><code>getProductBySlug()</code><br><small style="color:var(--muted)">configurator-products.js</small></td>
+  <td>Organizes documentation pages, navigation, or content lookup.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>form</code><br><small style="color:var(--muted)">pages/consultation-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>form node in pages/consultation-page.js.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>context</code><br><small style="color:var(--muted)">pages/consultation-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>context node in pages/consultation-page.js.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>status</code><br><small style="color:var(--muted)">pages/consultation-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>status node in pages/consultation-page.js.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>productSlug</code><br><small style="color:var(--muted)">pages/consultation-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>productSlug node in pages/consultation-page.js.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>designId</code><br><small style="color:var(--muted)">pages/consultation-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>designId node in pages/consultation-page.js.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>session</code><br><small style="color:var(--muted)">pages/consultation-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>session node in pages/consultation-page.js.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>validate()</code><br><small style="color:var(--muted)">pages/consultation-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>validate() node in pages/consultation-page.js.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>data</code><br><small style="color:var(--muted)">pages/consultation-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>data node in pages/consultation-page.js.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>record</code><br><small style="color:var(--muted)">pages/consultation-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>record node in pages/consultation-page.js.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>error</code><br><small style="color:var(--muted)">pages/consultation-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>error node in pages/consultation-page.js.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>product-page.js</code><br><small style="color:var(--muted)">pages/product-page.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>catalogue.js</code><br><small style="color:var(--muted)">data/catalogue.js</small><br><code>categoryName()</code><br><small style="color:var(--muted)">data/catalogue.js</small><br><code>getProductBySlug()</code><br><small style="color:var(--muted)">configurator-products.js</small><br>+3 more</td>
+  <td>Organizes documentation pages, navigation, or content lookup.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>root</code><br><small style="color:var(--muted)">pages/product-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>root node in pages/product-page.js.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>requested</code><br><small style="color:var(--muted)">pages/product-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>requested node in pages/product-page.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>pages/consultation-page.js</code></td><td>11 nodes</td></tr>
+<tr><td><code>configurator-products.js</code></td><td>9 nodes</td></tr>
+<tr><td><code>pages/product-page.js</code></td><td>9 nodes</td></tr>
+<tr><td><code>pages/shop-page.js</code></td><td>9 nodes</td></tr>
+<tr><td><code>data/catalogue.js</code></td><td>6 nodes</td></tr>
+<tr><td><code>design.js</code></td><td>1 nodes</td></tr>
+<tr><td><code>repositories/repositories.js</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x39, imports x15, calls x3, imports x3. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 5. Homejs Occasiondata Occasionstage ====== -->
+<h2 id="homejs-occasiondata-occasionstage">5. Homejs Occasiondata Occasionstage</h2>
+<p>Homejs Occasiondata Occasionstage groups implementation around homejs, occasiondata, occasionstage, occasionimage, mostly in home.js. This section covers 25 nodes and 24 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Homejs Occasiondata Occasionstage (25 nodes, 24 edges)
+    home_js_b160da2b("home.js")
+    js_home_occasiondata_dd4becf9("occasionData<br/><small>home.js</small>")
+    js_home_occasionstage_f09586af("occasionStage<br/><small>home.js</small>")
+    js_home_occasionimage_9b87bf36("occasionImage<br/><small>home.js</small>")
+    js_home_occasiontitle_18959056("occasionTitle<br/><small>home.js</small>")
+    js_home_occasionphrase_ce5dcd89("occasionPhrase<br/><small>home.js</small>")
+    js_home_occasionmeta_1a210544("occasionMeta<br/><small>home.js</small>")
+    js_home_occasionbuttons_d0641f4b("occasionButtons<br/><small>home.js</small>")
+    js_home_activateoccasion_119321e1("activateOccasion()<br/><small>home.js</small>")
+    js_home_index_cebc3af7("index<br/><small>home.js</small>")
+    js_home_craftdata_e0205519("craftData<br/><small>home.js</small>")
+    js_home_craftvideo_ec8c0417("craftVideo<br/><small>home.js</small>")
+    js_home_craftlabel_42225718("craftLabel<br/><small>home.js</small>")
+    js_home_craftbuttons_f40b28be("craftButtons<br/><small>home.js</small>")
+    js_home_craftplay_736c1a69("craftPlay<br/><small>home.js</small>")
+    js_home_activatecraft_729a7129("activateCraft()<br/><small>home.js</small>")
+    js_home_products_1b417dbf("products<br/><small>home.js</small>")
+    js_home_lead_a031318c("lead<br/><small>home.js</small>")
+    home_js_b160da2b -->|contains| js_home_occasiondata_dd4becf9
+    home_js_b160da2b -->|contains| js_home_occasionstage_f09586af
+    home_js_b160da2b -->|contains| js_home_occasionimage_9b87bf36
+    home_js_b160da2b -->|contains| js_home_occasiontitle_18959056
+    home_js_b160da2b -->|contains| js_home_occasionphrase_ce5dcd89
+    home_js_b160da2b -->|contains| js_home_occasionmeta_1a210544
+    home_js_b160da2b -->|contains| js_home_occasionbuttons_d0641f4b
+    home_js_b160da2b -->|contains| js_home_activateoccasion_119321e1
+    home_js_b160da2b -->|contains| js_home_index_cebc3af7
+    home_js_b160da2b -->|contains| js_home_craftdata_e0205519
+    home_js_b160da2b -->|contains| js_home_craftvideo_ec8c0417
+    home_js_b160da2b -->|contains| js_home_craftlabel_42225718
+    home_js_b160da2b -->|contains| js_home_craftbuttons_f40b28be
+    home_js_b160da2b -->|contains| js_home_craftplay_736c1a69
+    home_js_b160da2b -->|contains| js_home_activatecraft_729a7129
+    home_js_b160da2b -->|contains| js_home_products_1b417dbf
+    home_js_b160da2b -->|contains| js_home_lead_a031318c
+    %% Omitted for readability: 7 nodes, 0 edges
+    class home_js_b160da2b module;
+    class js_home_occasiondata_dd4becf9 function;
+    class js_home_occasionstage_f09586af function;
+    class js_home_occasionimage_9b87bf36 function;
+    class js_home_occasiontitle_18959056 function;
+    class js_home_occasionphrase_ce5dcd89 function;
+    class js_home_occasionmeta_1a210544 function;
+    class js_home_occasionbuttons_d0641f4b function;
+    class js_home_activateoccasion_119321e1 function;
+    class js_home_index_cebc3af7 function;
+    class js_home_craftdata_e0205519 function;
+    class js_home_craftvideo_ec8c0417 function;
+    class js_home_craftlabel_42225718 function;
+    class js_home_craftbuttons_f40b28be function;
+    class js_home_craftplay_736c1a69 function;
+    class js_home_activatecraft_729a7129 function;
+    class js_home_products_1b417dbf function;
+    class js_home_lead_a031318c function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>home.js</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>home.js node in home.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>occasionData</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>occasionData node in home.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>occasionStage</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>occasionStage node in home.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>occasionImage</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>occasionImage node in home.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>occasionTitle</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>occasionTitle node in home.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>occasionPhrase</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>occasionPhrase node in home.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>occasionMeta</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>occasionMeta node in home.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>occasionButtons</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>occasionButtons node in home.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>activateOccasion()</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>activateOccasion() node in home.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>index</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>index node in home.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>craftData</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>craftData node in home.js.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>craftVideo</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>craftVideo node in home.js.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>craftLabel</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>craftLabel node in home.js.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>craftButtons</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>craftButtons node in home.js.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>craftPlay</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>craftPlay node in home.js.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>activateCraft()</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>activateCraft() node in home.js.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>products</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>products node in home.js.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>lead</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>lead node in home.js.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>leadImage</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>leadImage node in home.js.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>leadName</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>leadName node in home.js.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>leadPrice</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>leadPrice node in home.js.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>leadMeta</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>leadMeta node in home.js.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>leadIndex</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>leadIndex node in home.js.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>productButtons</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>productButtons node in home.js.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>activateProduct()</code><br><small style="color:var(--muted)">home.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>activateProduct() node in home.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>home.js</code></td><td>25 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x24. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 6. Pagejs Pages Cart ====== -->
+<h2 id="pagejs-pages-cart">6. Pagejs Pages Cart</h2>
+<p>Pagejs Pages Cart groups implementation around pagejs, pages, cart, account, mostly in pages/cart-page.js, pages/account-page.js, app/utils.js. This section covers 18 nodes and 21 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Pagejs Pages Cart (18 nodes, 21 edges)
+    subgraph pagejs_pages_cart_pages_cart_page_js_84e30e3a["pages/cart-page.js"]
+        pages_cart_page_js_7e3b5ff9("cart-page.js")
+        pages_cart_page_render_0cf2b884("render()<br/><small>pages/cart-page.js</small>")
+        pages_cart_page_checkoutlink_4d19e764("checkoutLink<br/><small>pages/cart-page.js</small>")
+        pages_cart_page_clearbutton_78a8856e("clearButton<br/><small>pages/cart-page.js</small>")
+        pages_cart_page_itemsroot_2ae76a3e("itemsRoot<br/><small>pages/cart-page.js</small>")
+        pages_cart_page_specification_3424ebd2("specification()<br/><small>pages/cart-page.js</small>")
+        pages_cart_page_subtotalel_7af5bdb8("subtotalEl<br/><small>pages/cart-page.js</small>")
+        pages_cart_page_totalel_5c4e625b("totalEl<br/><small>pages/cart-page.js</small>")
+    end
+    subgraph pagejs_pages_cart_pages_account_page_js_199a6882["pages/account-page.js"]
+        pages_account_page_js_f520c4ab("account-page.js")
+        pages_account_page_cart_0111d1e1("cart<br/><small>pages/account-page.js</small>")
+        pages_account_page_designs_b4655948("designs<br/><small>pages/account-page.js</small>")
+        pages_account_page_orders_f097ce51("orders<br/><small>pages/account-page.js</small>")
+        pages_account_page_root_13cf27a8("root<br/><small>pages/account-page.js</small>")
+        pages_account_page_session_b06c3d0e("session<br/><small>pages/account-page.js</small>")
+        pages_account_page_spend_2810057c("spend<br/><small>pages/account-page.js</small>")
+    end
+    app_utils_escapehtml_b8033d7b("escapeHtml()<br/><small>app/utils.js</small>")
+    domain_configuration_carttotals_58b00749("cartTotals()<br/><small>domain/configuration.js</small>")
+    repositories_repositories_cartrepository_f8d56648("cartRepository<br/><small>repositories/repositories.js</small>")
+    pages_cart_page_render_0cf2b884 -->|calls| domain_configuration_carttotals_58b00749
+    pages_cart_page_render_0cf2b884 -->|calls| app_utils_escapehtml_b8033d7b
+    pages_account_page_js_f520c4ab -->|imports| app_utils_escapehtml_b8033d7b
+    pages_account_page_js_f520c4ab -->|imports| domain_configuration_carttotals_58b00749
+    pages_account_page_js_f520c4ab -->|imports| repositories_repositories_cartrepository_f8d56648
+    pages_cart_page_js_7e3b5ff9 -->|imports| app_utils_escapehtml_b8033d7b
+    pages_cart_page_js_7e3b5ff9 -->|imports| domain_configuration_carttotals_58b00749
+    pages_cart_page_js_7e3b5ff9 -->|imports| repositories_repositories_cartrepository_f8d56648
+    class pages_cart_page_js_7e3b5ff9 module;
+    class pages_cart_page_render_0cf2b884 function;
+    class pages_cart_page_checkoutlink_4d19e764 function;
+    class pages_cart_page_clearbutton_78a8856e function;
+    class pages_cart_page_itemsroot_2ae76a3e function;
+    class pages_cart_page_specification_3424ebd2 function;
+    class pages_cart_page_subtotalel_7af5bdb8 function;
+    class pages_cart_page_totalel_5c4e625b function;
+    class pages_account_page_js_f520c4ab module;
+    class pages_account_page_cart_0111d1e1 function;
+    class pages_account_page_designs_b4655948 function;
+    class pages_account_page_orders_f097ce51 function;
+    class pages_account_page_root_13cf27a8 function;
+    class pages_account_page_session_b06c3d0e function;
+    class pages_account_page_spend_2810057c function;
+    class app_utils_escapehtml_b8033d7b function;
+    class domain_configuration_carttotals_58b00749 function;
+    class repositories_repositories_cartrepository_f8d56648 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>escapeHtml()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>account-page.js</code><br><small style="color:var(--muted)">pages/account-page.js</small><br><code>cart-page.js</code><br><small style="color:var(--muted)">pages/cart-page.js</small><br><code>render()</code><br><small style="color:var(--muted)">pages/cart-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>Exports documentation data to a target format.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>cartTotals()</code><br><small style="color:var(--muted)">domain/configuration.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>account-page.js</code><br><small style="color:var(--muted)">pages/account-page.js</small><br><code>cart-page.js</code><br><small style="color:var(--muted)">pages/cart-page.js</small><br><code>render()</code><br><small style="color:var(--muted)">pages/cart-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>cartTotals() node in domain/configuration.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>account-page.js</code><br><small style="color:var(--muted)">pages/account-page.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>cartRepository</code><br><small style="color:var(--muted)">repositories/repositories.js</small><br><code>cartTotals()</code><br><small style="color:var(--muted)">domain/configuration.js</small><br><code>escapeHtml()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td>Organizes documentation pages, navigation, or content lookup.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>session</code><br><small style="color:var(--muted)">pages/account-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>session node in pages/account-page.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>root</code><br><small style="color:var(--muted)">pages/account-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>root node in pages/account-page.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>designs</code><br><small style="color:var(--muted)">pages/account-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>designs node in pages/account-page.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>orders</code><br><small style="color:var(--muted)">pages/account-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>orders node in pages/account-page.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>cart</code><br><small style="color:var(--muted)">pages/account-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>cart node in pages/account-page.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>spend</code><br><small style="color:var(--muted)">pages/account-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>spend node in pages/account-page.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>cart-page.js</code><br><small style="color:var(--muted)">pages/cart-page.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>cartRepository</code><br><small style="color:var(--muted)">repositories/repositories.js</small><br><code>cartTotals()</code><br><small style="color:var(--muted)">domain/configuration.js</small><br><code>escapeHtml()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td>Organizes documentation pages, navigation, or content lookup.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>itemsRoot</code><br><small style="color:var(--muted)">pages/cart-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>itemsRoot node in pages/cart-page.js.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>subtotalEl</code><br><small style="color:var(--muted)">pages/cart-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>subtotalEl node in pages/cart-page.js.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>totalEl</code><br><small style="color:var(--muted)">pages/cart-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>totalEl node in pages/cart-page.js.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>checkoutLink</code><br><small style="color:var(--muted)">pages/cart-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>checkoutLink node in pages/cart-page.js.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>clearButton</code><br><small style="color:var(--muted)">pages/cart-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>clearButton node in pages/cart-page.js.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>specification()</code><br><small style="color:var(--muted)">pages/cart-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>specification() node in pages/cart-page.js.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>render()</code><br><small style="color:var(--muted)">pages/cart-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>cartTotals()</code><br><small style="color:var(--muted)">domain/configuration.js</small><br><code>escapeHtml()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td>render() node in pages/cart-page.js.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>cartRepository</code><br><small style="color:var(--muted)">repositories/repositories.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>account-page.js</code><br><small style="color:var(--muted)">pages/account-page.js</small><br><code>cart-page.js</code><br><small style="color:var(--muted)">pages/cart-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>cartRepository node in repositories/repositories.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>pages/cart-page.js</code></td><td>8 nodes</td></tr>
+<tr><td><code>pages/account-page.js</code></td><td>7 nodes</td></tr>
+<tr><td><code>app/utils.js</code></td><td>1 nodes</td></tr>
+<tr><td><code>domain/configuration.js</code></td><td>1 nodes</td></tr>
+<tr><td><code>repositories/repositories.js</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x13, imports x6, calls x2. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 7. Sitejs Header Mobilemenu ====== -->
+<h2 id="sitejs-header-mobilemenu">7. Sitejs Header Mobilemenu</h2>
+<p>Sitejs Header Mobilemenu groups implementation around sitejs, header, mobilemenu, menubutton, mostly in site.js. This section covers 16 nodes and 15 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Sitejs Header Mobilemenu (16 nodes, 15 edges)
+    site_js_1965e512("site.js")
+    js_site_header_4458db3b("header<br/><small>site.js</small>")
+    js_site_mobilemenu_7116a9b1("mobileMenu<br/><small>site.js</small>")
+    js_site_menubutton_a3464ff4("menuButton<br/><small>site.js</small>")
+    js_site_footer_3901bf98("footer<br/><small>site.js</small>")
+    js_site_sections_042c88fd("sections<br/><small>site.js</small>")
+    js_site_observer_4ddf8af3("observer<br/><small>site.js</small>")
+    js_site_revealobserver_0181f464("revealObserver<br/><small>site.js</small>")
+    js_site_videoobserver_e77a9c7a("videoObserver<br/><small>site.js</small>")
+    js_site_heromedia_58477281("heroMedia<br/><small>site.js</small>")
+    js_site_update_f6fb0c2d("update()<br/><small>site.js</small>")
+    js_site_languagebutton_3ac5a08a("languageButton<br/><small>site.js</small>")
+    js_site_current_8902c825("current<br/><small>site.js</small>")
+    js_site_cartremove_a5c7ea39("cartRemove<br/><small>site.js</small>")
+    js_site_item_e91ae164("item<br/><small>site.js</small>")
+    js_site_items_21969055("items<br/><small>site.js</small>")
+    site_js_1965e512 -->|contains| js_site_header_4458db3b
+    site_js_1965e512 -->|contains| js_site_mobilemenu_7116a9b1
+    site_js_1965e512 -->|contains| js_site_menubutton_a3464ff4
+    site_js_1965e512 -->|contains| js_site_footer_3901bf98
+    site_js_1965e512 -->|contains| js_site_sections_042c88fd
+    site_js_1965e512 -->|contains| js_site_observer_4ddf8af3
+    site_js_1965e512 -->|contains| js_site_revealobserver_0181f464
+    site_js_1965e512 -->|contains| js_site_videoobserver_e77a9c7a
+    site_js_1965e512 -->|contains| js_site_heromedia_58477281
+    site_js_1965e512 -->|contains| js_site_update_f6fb0c2d
+    site_js_1965e512 -->|contains| js_site_languagebutton_3ac5a08a
+    site_js_1965e512 -->|contains| js_site_current_8902c825
+    site_js_1965e512 -->|contains| js_site_cartremove_a5c7ea39
+    site_js_1965e512 -->|contains| js_site_item_e91ae164
+    site_js_1965e512 -->|contains| js_site_items_21969055
+    class site_js_1965e512 module;
+    class js_site_header_4458db3b function;
+    class js_site_mobilemenu_7116a9b1 function;
+    class js_site_menubutton_a3464ff4 function;
+    class js_site_footer_3901bf98 function;
+    class js_site_sections_042c88fd function;
+    class js_site_observer_4ddf8af3 function;
+    class js_site_revealobserver_0181f464 function;
+    class js_site_videoobserver_e77a9c7a function;
+    class js_site_heromedia_58477281 function;
+    class js_site_update_f6fb0c2d function;
+    class js_site_languagebutton_3ac5a08a function;
+    class js_site_current_8902c825 function;
+    class js_site_cartremove_a5c7ea39 function;
+    class js_site_item_e91ae164 function;
+    class js_site_items_21969055 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>site.js</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>site.js node in site.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>header</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>header node in site.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>mobileMenu</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>mobileMenu node in site.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>menuButton</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>menuButton node in site.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>footer</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>footer node in site.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>sections</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>sections node in site.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>observer</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>observer node in site.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>revealObserver</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>revealObserver node in site.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>videoObserver</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>videoObserver node in site.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>heroMedia</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>heroMedia node in site.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>update()</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>update() node in site.js.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>languageButton</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>languageButton node in site.js.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>current</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>current node in site.js.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>cartRemove</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>cartRemove node in site.js.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>item</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>item node in site.js.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>items</code><br><small style="color:var(--muted)">site.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>items node in site.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>site.js</code></td><td>16 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x15. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 8. Pagejs Pages Orders ====== -->
+<h2 id="pagejs-pages-orders">8. Pagejs Pages Orders</h2>
+<p>Pagejs Pages Orders groups implementation around pagejs, pages, orders, success, mostly in pages/orders-page.js, app/utils.js, pages/success-page.js. This section covers 13 nodes and 15 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Pagejs Pages Orders (13 nodes, 15 edges)
+    subgraph pagejs_pages_orders_pages_orders_page_js_e8115eea["pages/orders-page.js"]
+        pages_orders_page_js_00ee702f("orders-page.js")
+        pages_orders_page_orders_674acb2c("orders<br/><small>pages/orders-page.js</small>")
+        pages_orders_page_root_6d21e85f("root<br/><small>pages/orders-page.js</small>")
+        pages_orders_page_session_2304e2bc("session<br/><small>pages/orders-page.js</small>")
+    end
+    subgraph pagejs_pages_orders_app_utils_js_2797fb64["app/utils.js"]
+        app_utils_formatdate_5372feaf("formatDate()<br/><small>app/utils.js</small>")
+        app_utils_formatcurrency_ab53dd21("formatCurrency()<br/><small>app/utils.js</small>")
+        app_utils_getquery_4d36c806("getQuery()<br/><small>app/utils.js</small>")
+    end
+    subgraph pagejs_pages_orders_pages_success_page_js_bec864ee["pages/success-page.js"]
+        pages_success_page_js_64bfe700("success-page.js")
+        pages_success_page_order_4ee02c0d("order<br/><small>pages/success-page.js</small>")
+        pages_success_page_root_fd8ced8a("root<br/><small>pages/success-page.js</small>")
+    end
+    pages_designs_page_render_622162b1("render()<br/><small>pages/designs-page.js</small>")
+    repositories_repositories_orderrepository_b2177fd7("orderRepository<br/><small>repositories/repositories.js</small>")
+    services_services_authservice_31d0b5ee("authService<br/><small>services/services.js</small>")
+    pages_designs_page_render_622162b1 -->|calls| app_utils_formatdate_5372feaf
+    pages_designs_page_render_622162b1 -->|calls| app_utils_formatcurrency_ab53dd21
+    pages_orders_page_js_00ee702f -->|imports| app_utils_formatcurrency_ab53dd21
+    pages_orders_page_js_00ee702f -->|imports| app_utils_formatdate_5372feaf
+    pages_orders_page_js_00ee702f -->|imports| repositories_repositories_orderrepository_b2177fd7
+    pages_orders_page_js_00ee702f -->|imports| services_services_authservice_31d0b5ee
+    pages_success_page_js_64bfe700 -->|imports| app_utils_formatcurrency_ab53dd21
+    pages_success_page_js_64bfe700 -->|imports| app_utils_formatdate_5372feaf
+    pages_success_page_js_64bfe700 -->|imports| app_utils_getquery_4d36c806
+    pages_success_page_js_64bfe700 -->|imports| repositories_repositories_orderrepository_b2177fd7
+    class pages_orders_page_js_00ee702f module;
+    class pages_orders_page_orders_674acb2c function;
+    class pages_orders_page_root_6d21e85f function;
+    class pages_orders_page_session_2304e2bc function;
+    class app_utils_formatdate_5372feaf function;
+    class app_utils_formatcurrency_ab53dd21 function;
+    class app_utils_getquery_4d36c806 function;
+    class pages_success_page_js_64bfe700 module;
+    class pages_success_page_order_4ee02c0d function;
+    class pages_success_page_root_fd8ced8a function;
+    class pages_designs_page_render_622162b1 function;
+    class repositories_repositories_orderrepository_b2177fd7 function;
+    class services_services_authservice_31d0b5ee function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>formatCurrency()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>orders-page.js</code><br><small style="color:var(--muted)">pages/orders-page.js</small><br><code>render()</code><br><small style="color:var(--muted)">pages/designs-page.js</small><br><code>success-page.js</code><br><small style="color:var(--muted)">pages/success-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>formatCurrency() node in app/utils.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>formatDate()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>orders-page.js</code><br><small style="color:var(--muted)">pages/orders-page.js</small><br><code>render()</code><br><small style="color:var(--muted)">pages/designs-page.js</small><br><code>success-page.js</code><br><small style="color:var(--muted)">pages/success-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>formatDate() node in app/utils.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>getQuery()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>success-page.js</code><br><small style="color:var(--muted)">pages/success-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>getQuery() node in app/utils.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>render()</code><br><small style="color:var(--muted)">pages/designs-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>formatCurrency()</code><br><small style="color:var(--muted)">app/utils.js</small><br><code>formatDate()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td>render() node in pages/designs-page.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>orders-page.js</code><br><small style="color:var(--muted)">pages/orders-page.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>authService</code><br><small style="color:var(--muted)">services/services.js</small><br><code>formatCurrency()</code><br><small style="color:var(--muted)">app/utils.js</small><br><code>formatDate()</code><br><small style="color:var(--muted)">app/utils.js</small><br>+1 more</td>
+  <td>Organizes documentation pages, navigation, or content lookup.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>session</code><br><small style="color:var(--muted)">pages/orders-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>session node in pages/orders-page.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>root</code><br><small style="color:var(--muted)">pages/orders-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>root node in pages/orders-page.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>orders</code><br><small style="color:var(--muted)">pages/orders-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>orders node in pages/orders-page.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>success-page.js</code><br><small style="color:var(--muted)">pages/success-page.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>formatCurrency()</code><br><small style="color:var(--muted)">app/utils.js</small><br><code>formatDate()</code><br><small style="color:var(--muted)">app/utils.js</small><br><code>getQuery()</code><br><small style="color:var(--muted)">app/utils.js</small><br>+1 more</td>
+  <td>Organizes documentation pages, navigation, or content lookup.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>root</code><br><small style="color:var(--muted)">pages/success-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>root node in pages/success-page.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>order</code><br><small style="color:var(--muted)">pages/success-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>order node in pages/success-page.js.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>orderRepository</code><br><small style="color:var(--muted)">repositories/repositories.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>orders-page.js</code><br><small style="color:var(--muted)">pages/orders-page.js</small><br><code>success-page.js</code><br><small style="color:var(--muted)">pages/success-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>orderRepository node in repositories/repositories.js.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>authService</code><br><small style="color:var(--muted)">services/services.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>orders-page.js</code><br><small style="color:var(--muted)">pages/orders-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>authService node in services/services.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>pages/orders-page.js</code></td><td>4 nodes</td></tr>
+<tr><td><code>app/utils.js</code></td><td>3 nodes</td></tr>
+<tr><td><code>pages/success-page.js</code></td><td>3 nodes</td></tr>
+<tr><td><code>pages/designs-page.js</code></td><td>1 nodes</td></tr>
+<tr><td><code>repositories/repositories.js</code></td><td>1 nodes</td></tr>
+<tr><td><code>services/services.js</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: imports x8, contains x5, calls x2. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 9. Checkout Pagejs Pages ====== -->
+<h2 id="checkout-pagejs-pages">9. Checkout Pagejs Pages</h2>
+<p>Checkout Pagejs Pages groups implementation around checkout, pagejs, pages, session, mostly in pages/checkout-page.js. This section covers 12 nodes and 11 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Checkout Pagejs Pages (12 nodes, 11 edges)
+    pages_checkout_page_js_b3997764("checkout-page.js")
+    pages_checkout_page_session_20d7df62("session<br/><small>pages/checkout-page.js</small>")
+    pages_checkout_page_form_235e2346("form<br/><small>pages/checkout-page.js</small>")
+    pages_checkout_page_summary_2774612c("summary<br/><small>pages/checkout-page.js</small>")
+    pages_checkout_page_status_8785341b("status<br/><small>pages/checkout-page.js</small>")
+    pages_checkout_page_submit_d518855c("submit<br/><small>pages/checkout-page.js</small>")
+    pages_checkout_page_lines_12b1c662("lines<br/><small>pages/checkout-page.js</small>")
+    pages_checkout_page_errorfor_c65c047f("errorFor()<br/><small>pages/checkout-page.js</small>")
+    pages_checkout_page_validate_5980eeec("validate()<br/><small>pages/checkout-page.js</small>")
+    pages_checkout_page_totals_0316bff5("totals<br/><small>pages/checkout-page.js</small>")
+    pages_checkout_page_data_25442197("data<br/><small>pages/checkout-page.js</small>")
+    pages_checkout_page_order_966a0586("order<br/><small>pages/checkout-page.js</small>")
+    pages_checkout_page_js_b3997764 -->|contains| pages_checkout_page_session_20d7df62
+    pages_checkout_page_js_b3997764 -->|contains| pages_checkout_page_form_235e2346
+    pages_checkout_page_js_b3997764 -->|contains| pages_checkout_page_summary_2774612c
+    pages_checkout_page_js_b3997764 -->|contains| pages_checkout_page_status_8785341b
+    pages_checkout_page_js_b3997764 -->|contains| pages_checkout_page_submit_d518855c
+    pages_checkout_page_js_b3997764 -->|contains| pages_checkout_page_lines_12b1c662
+    pages_checkout_page_js_b3997764 -->|contains| pages_checkout_page_errorfor_c65c047f
+    pages_checkout_page_js_b3997764 -->|contains| pages_checkout_page_validate_5980eeec
+    pages_checkout_page_js_b3997764 -->|contains| pages_checkout_page_totals_0316bff5
+    pages_checkout_page_js_b3997764 -->|contains| pages_checkout_page_data_25442197
+    pages_checkout_page_js_b3997764 -->|contains| pages_checkout_page_order_966a0586
+    class pages_checkout_page_js_b3997764 module;
+    class pages_checkout_page_session_20d7df62 function;
+    class pages_checkout_page_form_235e2346 function;
+    class pages_checkout_page_summary_2774612c function;
+    class pages_checkout_page_status_8785341b function;
+    class pages_checkout_page_submit_d518855c function;
+    class pages_checkout_page_lines_12b1c662 function;
+    class pages_checkout_page_errorfor_c65c047f function;
+    class pages_checkout_page_validate_5980eeec function;
+    class pages_checkout_page_totals_0316bff5 function;
+    class pages_checkout_page_data_25442197 function;
+    class pages_checkout_page_order_966a0586 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>checkout-page.js</code><br><small style="color:var(--muted)">pages/checkout-page.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Organizes documentation pages, navigation, or content lookup.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>session</code><br><small style="color:var(--muted)">pages/checkout-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>session node in pages/checkout-page.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>form</code><br><small style="color:var(--muted)">pages/checkout-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>form node in pages/checkout-page.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>summary</code><br><small style="color:var(--muted)">pages/checkout-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>summary node in pages/checkout-page.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>status</code><br><small style="color:var(--muted)">pages/checkout-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>status node in pages/checkout-page.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>submit</code><br><small style="color:var(--muted)">pages/checkout-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>submit node in pages/checkout-page.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>lines</code><br><small style="color:var(--muted)">pages/checkout-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>lines node in pages/checkout-page.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>errorFor()</code><br><small style="color:var(--muted)">pages/checkout-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>errorFor() node in pages/checkout-page.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>validate()</code><br><small style="color:var(--muted)">pages/checkout-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>validate() node in pages/checkout-page.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>totals</code><br><small style="color:var(--muted)">pages/checkout-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>totals node in pages/checkout-page.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>data</code><br><small style="color:var(--muted)">pages/checkout-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>data node in pages/checkout-page.js.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>order</code><br><small style="color:var(--muted)">pages/checkout-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>order node in pages/checkout-page.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>pages/checkout-page.js</code></td><td>12 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x11. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 10. Utilsjs App Configurationjs ====== -->
+<h2 id="utilsjs-app-configurationjs">10. Utilsjs App Configurationjs</h2>
+<p>Utilsjs App Configurationjs groups implementation around utilsjs, app, configurationjs, domain, mostly in app/utils.js, domain/configuration.js, services/services.js. This section covers 12 nodes and 18 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Utilsjs App Configurationjs (12 nodes, 18 edges)
+    subgraph utilsjs_app_configurationjs_app_utils_js_98080bed["app/utils.js"]
+        app_utils_fingerprint_5a8c0367("fingerprint()<br/><small>app/utils.js</small>")
+        app_utils_normalizeobject_48a5cb12("normalizeObject()<br/><small>app/utils.js</small>")
+        app_utils_js_38e627da("utils.js")
+        app_utils_clone_03d53138("clone()<br/><small>app/utils.js</small>")
+        app_utils_createid_0185a895("createId()<br/><small>app/utils.js</small>")
+    end
+    subgraph utilsjs_app_configurationjs_domain_configuration_c3661af3["domain/configuration.js"]
+        domain_configuration_js_957ec898("configuration.js")
+        domain_configuration_normalizecartline_e1a16b64("normalizeCartLine()<br/><small>domain/configuration.js</small>")
+        domain_configuration_configurationfingerprint_9b5d37b1("configurationFingerprint()<br/><small>domain/configuration.js</small>")
+        domain_configuration_safelinetotal_128a69ac("safeLineTotal()<br/><small>domain/configuration.js</small>")
+    end
+    subgraph utilsjs_app_configurationjs_services_services_js_8a504449["services/services.js"]
+        services_services_js_c36809e4("services.js")
+        services_services_demo_user_3ad2bec8("DEMO_USER<br/><small>services/services.js</small>")
+        services_services_checkoutservice_c4bd7063("checkoutService<br/><small>services/services.js</small>")
+    end
+    app_utils_fingerprint_5a8c0367 -->|calls| app_utils_normalizeobject_48a5cb12
+    domain_configuration_configurationfingerprint_9b5d37b1 -->|calls| app_utils_fingerprint_5a8c0367
+    domain_configuration_normalizecartline_e1a16b64 -->|calls| domain_configuration_configurationfingerprint_9b5d37b1
+    domain_configuration_js_957ec898 -->|imports| app_utils_js_38e627da
+    domain_configuration_js_957ec898 -->|imports| app_utils_fingerprint_5a8c0367
+    services_services_js_c36809e4 -->|imports| app_utils_js_38e627da
+    services_services_js_c36809e4 -->|imports| app_utils_clone_03d53138
+    services_services_js_c36809e4 -->|imports| app_utils_createid_0185a895
+    services_services_js_c36809e4 -->|imports| domain_configuration_js_957ec898
+    class app_utils_fingerprint_5a8c0367 function;
+    class app_utils_normalizeobject_48a5cb12 function;
+    class app_utils_js_38e627da module;
+    class app_utils_clone_03d53138 function;
+    class app_utils_createid_0185a895 function;
+    class domain_configuration_js_957ec898 module;
+    class domain_configuration_normalizecartline_e1a16b64 function;
+    class domain_configuration_configurationfingerprint_9b5d37b1 function;
+    class domain_configuration_safelinetotal_128a69ac function;
+    class services_services_js_c36809e4 module;
+    class services_services_demo_user_3ad2bec8 klass;
+    class services_services_checkoutservice_c4bd7063 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>utils.js</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>configuration.js</code><br><small style="color:var(--muted)">domain/configuration.js</small><br><code>services.js</code><br><small style="color:var(--muted)">services/services.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>utils.js node in app/utils.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>createId()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>services.js</code><br><small style="color:var(--muted)">services/services.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>createId() node in app/utils.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>normalizeObject()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>fingerprint()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>normalizeObject() node in app/utils.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>fingerprint()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>configuration.js</code><br><small style="color:var(--muted)">domain/configuration.js</small><br><code>configurationFingerprint()</code><br><small style="color:var(--muted)">domain/configuration.js</small></td>
+  <td><code>normalizeObject()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td>fingerprint() node in app/utils.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>clone()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>services.js</code><br><small style="color:var(--muted)">services/services.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>Turns a local path or remote repository into analysis context.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>configuration.js</code><br><small style="color:var(--muted)">domain/configuration.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>services.js</code><br><small style="color:var(--muted)">services/services.js</small></td>
+  <td><code>fingerprint()</code><br><small style="color:var(--muted)">app/utils.js</small><br><code>utils.js</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>configurationFingerprint()</code><br><small style="color:var(--muted)">domain/configuration.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>normalizeCartLine()</code><br><small style="color:var(--muted)">domain/configuration.js</small></td>
+  <td><code>fingerprint()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>safeLineTotal()</code><br><small style="color:var(--muted)">domain/configuration.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>safeLineTotal() node in domain/configuration.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>normalizeCartLine()</code><br><small style="color:var(--muted)">domain/configuration.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>configurationFingerprint()</code><br><small style="color:var(--muted)">domain/configuration.js</small></td>
+  <td>normalizeCartLine() node in domain/configuration.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>services.js</code><br><small style="color:var(--muted)">services/services.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>clone()</code><br><small style="color:var(--muted)">app/utils.js</small><br><code>configuration.js</code><br><small style="color:var(--muted)">domain/configuration.js</small><br><code>createId()</code><br><small style="color:var(--muted)">app/utils.js</small><br>+1 more</td>
+  <td>services.js node in services/services.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>DEMO_USER</code><br><small style="color:var(--muted)">services/services.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>DEMO_USER node in services/services.js.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>checkoutService</code><br><small style="color:var(--muted)">services/services.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>checkoutService node in services/services.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>app/utils.js</code></td><td>5 nodes</td></tr>
+<tr><td><code>domain/configuration.js</code></td><td>4 nodes</td></tr>
+<tr><td><code>services/services.js</code></td><td>3 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x9, calls x3, imports x3, imports x3. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 11. Repositoriesjs Repositories Designs ====== -->
+<h2 id="repositoriesjs-repositories-designs">11. Repositoriesjs Repositories Designs</h2>
+<p>Repositoriesjs Repositories Designs groups implementation around repositoriesjs, repositories, designs, pagejs, mostly in repositories/repositories.js, pages/designs-page.js. This section covers 11 nodes and 12 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Repositoriesjs Repositories Designs (11 nodes, 12 edges)
+    subgraph repositoriesjs_repositories_designs_repositories_fc8b9943["repositories/repositories.js"]
+        repositories_repositories_js_cd9ca47f("repositories.js")
+        repositories_repositories_designrepository_25d0a7bb("designRepository<br/><small>repositories/repositories.js</small>")
+        repositories_repositories_sharerepository_3ca8d906("shareRepository<br/><small>repositories/repositories.js</small>")
+        repositories_repositories_keys_4d43ec67("KEYS<br/><small>repositories/repositories.js</small>")
+        repositories_repositories_arrayvalidator_c69ea1a4("arrayValidator()<br/><small>repositories/repositories.js</small>")
+        repositories_repositories_draftrepository_da06c704("draftRepository<br/><small>repositories/repositories.js</small>")
+        repositories_repositories_objectornull_990ae013("objectOrNull()<br/><small>repositories/repositories.js</small>")
+    end
+    subgraph repositoriesjs_repositories_designs_pages_design_eb3b17c2["pages/designs-page.js"]
+        pages_designs_page_js_7fc9e230("designs-page.js")
+        pages_designs_page_grid_7fd964c2("grid<br/><small>pages/designs-page.js</small>")
+        pages_designs_page_session_465c5c6b("session<br/><small>pages/designs-page.js</small>")
+        pages_designs_page_status_1a0c6988("status<br/><small>pages/designs-page.js</small>")
+    end
+    pages_designs_page_js_7fc9e230 -->|imports| repositories_repositories_js_cd9ca47f
+    pages_designs_page_js_7fc9e230 -->|imports| repositories_repositories_designrepository_25d0a7bb
+    pages_designs_page_js_7fc9e230 -->|imports| repositories_repositories_sharerepository_3ca8d906
+    class repositories_repositories_js_cd9ca47f module;
+    class repositories_repositories_designrepository_25d0a7bb function;
+    class repositories_repositories_sharerepository_3ca8d906 function;
+    class repositories_repositories_keys_4d43ec67 klass;
+    class repositories_repositories_arrayvalidator_c69ea1a4 function;
+    class repositories_repositories_draftrepository_da06c704 function;
+    class repositories_repositories_objectornull_990ae013 function;
+    class pages_designs_page_js_7fc9e230 module;
+    class pages_designs_page_grid_7fd964c2 function;
+    class pages_designs_page_session_465c5c6b function;
+    class pages_designs_page_status_1a0c6988 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>designs-page.js</code><br><small style="color:var(--muted)">pages/designs-page.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>designRepository</code><br><small style="color:var(--muted)">repositories/repositories.js</small><br><code>repositories.js</code><br><small style="color:var(--muted)">repositories/repositories.js</small><br><code>shareRepository</code><br><small style="color:var(--muted)">repositories/repositories.js</small></td>
+  <td>Organizes documentation pages, navigation, or content lookup.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>session</code><br><small style="color:var(--muted)">pages/designs-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>session node in pages/designs-page.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>grid</code><br><small style="color:var(--muted)">pages/designs-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>grid node in pages/designs-page.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>status</code><br><small style="color:var(--muted)">pages/designs-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>status node in pages/designs-page.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>repositories.js</code><br><small style="color:var(--muted)">repositories/repositories.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>designs-page.js</code><br><small style="color:var(--muted)">pages/designs-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>repositories.js node in repositories/repositories.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>KEYS</code><br><small style="color:var(--muted)">repositories/repositories.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>KEYS node in repositories/repositories.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>arrayValidator()</code><br><small style="color:var(--muted)">repositories/repositories.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>arrayValidator() node in repositories/repositories.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>objectOrNull()</code><br><small style="color:var(--muted)">repositories/repositories.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>objectOrNull() node in repositories/repositories.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>draftRepository</code><br><small style="color:var(--muted)">repositories/repositories.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>draftRepository node in repositories/repositories.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>designRepository</code><br><small style="color:var(--muted)">repositories/repositories.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>designs-page.js</code><br><small style="color:var(--muted)">pages/designs-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>designRepository node in repositories/repositories.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>shareRepository</code><br><small style="color:var(--muted)">repositories/repositories.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>designs-page.js</code><br><small style="color:var(--muted)">pages/designs-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>shareRepository node in repositories/repositories.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>repositories/repositories.js</code></td><td>7 nodes</td></tr>
+<tr><td><code>pages/designs-page.js</code></td><td>4 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x9, imports x2, imports x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 12. Storagejs Repositories Nowiso ====== -->
+<h2 id="storagejs-repositories-nowiso">12. Storagejs Repositories Nowiso</h2>
+<p>Storagejs Repositories Nowiso groups implementation around storagejs, repositories, nowiso, app, mostly in repositories/storage.js, app/utils.js. This section covers 10 nodes and 18 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Storagejs Repositories Nowiso (10 nodes, 18 edges)
+    subgraph storagejs_repositories_nowiso_repositories_stora_4d25d870["repositories/storage.js"]
+        repositories_storage_readdocument_4dd31d75("readDocument()<br/><small>repositories/storage.js</small>")
+        repositories_storage_updatedocument_4fb0c714("updateDocument()<br/><small>repositories/storage.js</small>")
+        repositories_storage_readlegacy_bb4d761d("readLegacy()<br/><small>repositories/storage.js</small>")
+        repositories_storage_js_00383702("storage.js")
+        repositories_storage_envelope_98dd6f58("envelope()<br/><small>repositories/storage.js</small>")
+        repositories_storage_parse_6424f00d("parse()<br/><small>repositories/storage.js</small>")
+        repositories_storage_writedocument_1222c4ce("writeDocument()<br/><small>repositories/storage.js</small>")
+        repositories_storage_legacy_keys_7849e4fa("LEGACY_KEYS<br/><small>repositories/storage.js</small>")
+        repositories_storage_removedocument_6d00315e("removeDocument()<br/><small>repositories/storage.js</small>")
+    end
+    app_utils_nowiso_ba1123d4("nowIso()<br/><small>app/utils.js</small>")
+    repositories_storage_envelope_98dd6f58 -->|calls| app_utils_nowiso_ba1123d4
+    repositories_storage_readlegacy_bb4d761d -->|calls| repositories_storage_parse_6424f00d
+    repositories_storage_readlegacy_bb4d761d -->|calls| app_utils_nowiso_ba1123d4
+    repositories_storage_readdocument_4dd31d75 -->|calls| repositories_storage_parse_6424f00d
+    repositories_storage_readdocument_4dd31d75 -->|calls| repositories_storage_readlegacy_bb4d761d
+    repositories_storage_readdocument_4dd31d75 -->|calls| repositories_storage_writedocument_1222c4ce
+    repositories_storage_writedocument_1222c4ce -->|calls| repositories_storage_envelope_98dd6f58
+    repositories_storage_updatedocument_4fb0c714 -->|calls| repositories_storage_readdocument_4dd31d75
+    repositories_storage_updatedocument_4fb0c714 -->|calls| repositories_storage_writedocument_1222c4ce
+    repositories_storage_js_00383702 -->|imports| app_utils_nowiso_ba1123d4
+    class repositories_storage_readdocument_4dd31d75 function;
+    class repositories_storage_updatedocument_4fb0c714 function;
+    class repositories_storage_readlegacy_bb4d761d function;
+    class repositories_storage_js_00383702 module;
+    class repositories_storage_envelope_98dd6f58 function;
+    class repositories_storage_parse_6424f00d function;
+    class repositories_storage_writedocument_1222c4ce function;
+    class repositories_storage_legacy_keys_7849e4fa klass;
+    class repositories_storage_removedocument_6d00315e function;
+    class app_utils_nowiso_ba1123d4 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>nowIso()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>envelope()</code><br><small style="color:var(--muted)">repositories/storage.js</small><br><code>readLegacy()</code><br><small style="color:var(--muted)">repositories/storage.js</small><br><code>storage.js</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>nowIso() node in app/utils.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>storage.js</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>nowIso()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td>Supports retrieval-augmented Q&amp;A or streaming chat.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>LEGACY_KEYS</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>LEGACY_KEYS node in repositories/storage.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>envelope()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>writeDocument()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td><code>nowIso()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td>envelope() node in repositories/storage.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>parse()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>readDocument()</code><br><small style="color:var(--muted)">repositories/storage.js</small><br><code>readLegacy()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>parse() node in repositories/storage.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>readLegacy()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>readDocument()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td><code>nowIso()</code><br><small style="color:var(--muted)">app/utils.js</small><br><code>parse()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td>readLegacy() node in repositories/storage.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>readDocument()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>updateDocument()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td><code>parse()</code><br><small style="color:var(--muted)">repositories/storage.js</small><br><code>readLegacy()</code><br><small style="color:var(--muted)">repositories/storage.js</small><br><code>writeDocument()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td>readDocument() node in repositories/storage.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>writeDocument()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>readDocument()</code><br><small style="color:var(--muted)">repositories/storage.js</small><br><code>updateDocument()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td><code>envelope()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td>writeDocument() node in repositories/storage.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>removeDocument()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>removeDocument() node in repositories/storage.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>updateDocument()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>readDocument()</code><br><small style="color:var(--muted)">repositories/storage.js</small><br><code>writeDocument()</code><br><small style="color:var(--muted)">repositories/storage.js</small></td>
+  <td>updateDocument() node in repositories/storage.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>repositories/storage.js</code></td><td>9 nodes</td></tr>
+<tr><td><code>app/utils.js</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: calls x9, contains x8, imports x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 13. Auth Pagejs Pages ====== -->
+<h2 id="auth-pagejs-pages">13. Auth Pagejs Pages</h2>
+<p>Auth Pagejs Pages groups implementation around auth, pagejs, pages, form, mostly in pages/auth-page.js, repositories/repositories.js. This section covers 10 nodes and 9 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Auth Pagejs Pages (10 nodes, 9 edges)
+    subgraph auth_pagejs_pages_pages_auth_page_js_25cb1481["pages/auth-page.js"]
+        pages_auth_page_js_cbddd40d("auth-page.js")
+        pages_auth_page_back_f35ab1b0("back<br/><small>pages/auth-page.js</small>")
+        pages_auth_page_credentials_ecba8d9a("credentials<br/><small>pages/auth-page.js</small>")
+        pages_auth_page_form_4fc74d9c("form<br/><small>pages/auth-page.js</small>")
+        pages_auth_page_otp_bafffdc8("otp<br/><small>pages/auth-page.js</small>")
+        pages_auth_page_phone_ff6fcf96("phone<br/><small>pages/auth-page.js</small>")
+        pages_auth_page_request_96a61bfc("request<br/><small>pages/auth-page.js</small>")
+        pages_auth_page_returnurl_72796426("returnUrl<br/><small>pages/auth-page.js</small>")
+        pages_auth_page_status_2e684e93("status<br/><small>pages/auth-page.js</small>")
+    end
+    repositories_repositories_sessionrepository_310af225("sessionRepository<br/><small>repositories/repositories.js</small>")
+    pages_auth_page_js_cbddd40d -->|imports| repositories_repositories_sessionrepository_310af225
+    class pages_auth_page_js_cbddd40d module;
+    class pages_auth_page_back_f35ab1b0 function;
+    class pages_auth_page_credentials_ecba8d9a function;
+    class pages_auth_page_form_4fc74d9c function;
+    class pages_auth_page_otp_bafffdc8 function;
+    class pages_auth_page_phone_ff6fcf96 function;
+    class pages_auth_page_request_96a61bfc function;
+    class pages_auth_page_returnurl_72796426 function;
+    class pages_auth_page_status_2e684e93 function;
+    class repositories_repositories_sessionrepository_310af225 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>auth-page.js</code><br><small style="color:var(--muted)">pages/auth-page.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>sessionRepository</code><br><small style="color:var(--muted)">repositories/repositories.js</small></td>
+  <td>Organizes documentation pages, navigation, or content lookup.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>form</code><br><small style="color:var(--muted)">pages/auth-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>form node in pages/auth-page.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>credentials</code><br><small style="color:var(--muted)">pages/auth-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>credentials node in pages/auth-page.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>otp</code><br><small style="color:var(--muted)">pages/auth-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>otp node in pages/auth-page.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>status</code><br><small style="color:var(--muted)">pages/auth-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>status node in pages/auth-page.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>request</code><br><small style="color:var(--muted)">pages/auth-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>request node in pages/auth-page.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>back</code><br><small style="color:var(--muted)">pages/auth-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>back node in pages/auth-page.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>returnUrl</code><br><small style="color:var(--muted)">pages/auth-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>returnUrl node in pages/auth-page.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>phone</code><br><small style="color:var(--muted)">pages/auth-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>phone node in pages/auth-page.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>sessionRepository</code><br><small style="color:var(--muted)">repositories/repositories.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>auth-page.js</code><br><small style="color:var(--muted)">pages/auth-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>sessionRepository node in repositories/repositories.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>pages/auth-page.js</code></td><td>9 nodes</td></tr>
+<tr><td><code>repositories/repositories.js</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x8, imports x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 14. Share Pagejs Pages ====== -->
+<h2 id="share-pagejs-pages">14. Share Pagejs Pages</h2>
+<p>Share Pagejs Pages groups implementation around share, pagejs, pages, setstatus, mostly in pages/share-page.js, app/utils.js. This section covers 7 nodes and 6 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Share Pagejs Pages (7 nodes, 6 edges)
+    subgraph share_pagejs_pages_pages_share_page_js_51c3e3e1["pages/share-page.js"]
+        pages_share_page_js_44bd1708("share-page.js")
+        pages_share_page_button_59246248("button<br/><small>pages/share-page.js</small>")
+        pages_share_page_id_89b9e41f("id<br/><small>pages/share-page.js</small>")
+        pages_share_page_labels_1d9a5bdb("labels<br/><small>pages/share-page.js</small>")
+        pages_share_page_root_3f365831("root<br/><small>pages/share-page.js</small>")
+        pages_share_page_status_d590054a("status<br/><small>pages/share-page.js</small>")
+    end
+    app_utils_setstatus_3a4688f2("setStatus()<br/><small>app/utils.js</small>")
+    pages_share_page_js_44bd1708 -->|imports| app_utils_setstatus_3a4688f2
+    class pages_share_page_js_44bd1708 module;
+    class pages_share_page_button_59246248 function;
+    class pages_share_page_id_89b9e41f function;
+    class pages_share_page_labels_1d9a5bdb function;
+    class pages_share_page_root_3f365831 function;
+    class pages_share_page_status_d590054a function;
+    class app_utils_setstatus_3a4688f2 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>setStatus()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>share-page.js</code><br><small style="color:var(--muted)">pages/share-page.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>setStatus() node in app/utils.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>share-page.js</code><br><small style="color:var(--muted)">pages/share-page.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>setStatus()</code><br><small style="color:var(--muted)">app/utils.js</small></td>
+  <td>Organizes documentation pages, navigation, or content lookup.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>root</code><br><small style="color:var(--muted)">pages/share-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>root node in pages/share-page.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>id</code><br><small style="color:var(--muted)">pages/share-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>id node in pages/share-page.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>labels</code><br><small style="color:var(--muted)">pages/share-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>labels node in pages/share-page.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>button</code><br><small style="color:var(--muted)">pages/share-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>button node in pages/share-page.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>status</code><br><small style="color:var(--muted)">pages/share-page.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>status node in pages/share-page.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>pages/share-page.js</code></td><td>6 nodes</td></tr>
+<tr><td><code>app/utils.js</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x5, imports x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<h2 id="stats">Project Statistics</h2>
+
+<div class="grid">
+  <div class="card">
+    <h4>Graph</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><td>Nodes</td><td>312</td></tr>
+      <tr><td>Edges</td><td>555</td></tr>
+      <tr><td>Hyperedges</td><td>0</td></tr>
+      <tr><td>Communities</td><td>13</td></tr>
+      <tr><td>Documented Sections</td><td>13</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Edge Confidence</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><td>EXTRACTED</td><td>555</td></tr>
+      <tr><td>INFERRED</td><td>0</td></tr>
+      <tr><td>AMBIGUOUS</td><td>0</td></tr>
+    </table>
+  </div>
+</div>
+
+<div style="text-align:center; padding:40px 0; color: var(--muted); font-size:0.9rem;">
+  <p>WOYKE_Static_HTML_Luxury_V3 — Architecture Documentation</p>
+  <p>Generated: 2026-07-20 07:33 UTC · graphify callflow-html</p>
+</div>
+
+</div><!-- .container -->
+
+<script>
+(function () {
+  const mermaidConfig = {
+    startOnLoad: false,
+    theme: 'dark',
+    securityLevel: 'loose',
+    flowchart: { htmlLabels: true, useMaxWidth: true },
+    themeVariables: {
+      primaryColor: '#1e293b',
+      primaryTextColor: '#e2e8f0',
+      primaryBorderColor: '#38bdf8',
+      secondaryColor: '#0f172a',
+      tertiaryColor: '#334155',
+      lineColor: '#64748b',
+      textColor: '#e2e8f0',
+    }
+  };
+
+  mermaid.initialize(mermaidConfig);
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function enhanceMermaidDiagrams() {
+    document.querySelectorAll('.mermaid').forEach((container) => {
+      if (container.dataset.zoomReady === 'true') return;
+      const svg = container.querySelector('svg');
+      if (!svg) return;
+
+      container.dataset.zoomReady = 'true';
+      container.classList.add('is-enhanced');
+
+      const viewport = document.createElement('div');
+      viewport.className = 'mermaid-viewport';
+      svg.parentNode.insertBefore(viewport, svg);
+      viewport.appendChild(svg);
+
+      const toolbar = document.createElement('div');
+      toolbar.className = 'mermaid-toolbar';
+      toolbar.innerHTML = [
+        '<button type="button" data-action="zoom-out" title="Zoom out">-</button>',
+        '<span class="zoom-level" data-role="level">100%</span>',
+        '<button type="button" data-action="zoom-in" title="Zoom in">+</button>',
+        '<button type="button" data-action="fit" title="Fit width">Fit</button>',
+        '<button type="button" data-action="reset" title="Reset view">Reset</button>'
+      ].join('');
+      container.insertBefore(toolbar, viewport);
+
+      const state = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0, originX: 0, originY: 0 };
+      const level = toolbar.querySelector('[data-role="level"]');
+
+      function applyTransform() {
+        svg.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+        level.textContent = `${Math.round(state.scale * 100)}%`;
+      }
+
+      function zoomBy(delta) {
+        state.scale = clamp(state.scale + delta, 0.25, 3);
+        applyTransform();
+      }
+
+      function reset() {
+        state.scale = 1;
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      function fitWidth() {
+        const rawWidth = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width
+          ? svg.viewBox.baseVal.width
+          : svg.getBoundingClientRect().width / state.scale;
+        if (!rawWidth) {
+          reset();
+          return;
+        }
+        state.scale = clamp((viewport.clientWidth - 48) / rawWidth, 0.25, 1.4);
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      toolbar.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-action]');
+        if (!button) return;
+        const action = button.dataset.action;
+        if (action === 'zoom-in') zoomBy(0.15);
+        if (action === 'zoom-out') zoomBy(-0.15);
+        if (action === 'fit') fitWidth();
+        if (action === 'reset') reset();
+      });
+
+      viewport.addEventListener('wheel', (event) => {
+        if (!event.ctrlKey && !event.metaKey) return;
+        event.preventDefault();
+        zoomBy(event.deltaY < 0 ? 0.1 : -0.1);
+      }, { passive: false });
+
+      viewport.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+        state.dragging = true;
+        state.startX = event.clientX;
+        state.startY = event.clientY;
+        state.originX = state.x;
+        state.originY = state.y;
+        viewport.classList.add('is-dragging');
+        viewport.setPointerCapture(event.pointerId);
+      });
+
+      viewport.addEventListener('pointermove', (event) => {
+        if (!state.dragging) return;
+        state.x = state.originX + event.clientX - state.startX;
+        state.y = state.originY + event.clientY - state.startY;
+        applyTransform();
+      });
+
+      function endDrag(event) {
+        if (!state.dragging) return;
+        state.dragging = false;
+        viewport.classList.remove('is-dragging');
+        if (viewport.hasPointerCapture(event.pointerId)) {
+          viewport.releasePointerCapture(event.pointerId);
+        }
+      }
+
+      viewport.addEventListener('pointerup', endDrag);
+      viewport.addEventListener('pointercancel', endDrag);
+      applyTransform();
+    });
+  }
+
+  function renderMermaid() {
+    const result = mermaid.run
+      ? mermaid.run({ querySelector: '.mermaid' })
+      : Promise.resolve();
+    Promise.resolve(result)
+      .then(enhanceMermaidDiagrams)
+      .catch((error) => {
+        console.error('Mermaid render failed:', error);
+        enhanceMermaidDiagrams();
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderMermaid);
+  } else {
+    renderMermaid();
+  }
+})();
+</script>
+
+</body>
+</html>

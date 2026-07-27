@@ -887,3 +887,4 @@
     max-height: calc(100dvh - 92px);
   }
 }
+dialog:not([open]){display:none!important}

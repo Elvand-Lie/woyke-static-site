@@ -6,12 +6,14 @@ import {
 } from './configurator-options.js';
 import {
   products,
+  categoryLabels,
   getProductBySlug,
 } from './configurator-products.js';
 import { resolvePreviewAsset } from './configurator-preview.js';
+import { configurationFingerprint } from './domain/configuration.js';
+import { getQuery, nowIso, safeReturnUrl } from './app/utils.js';
+import { cartRepository, designRepository, draftRepository, sessionRepository } from './repositories/repositories.js';
 
-const STORAGE_KEY_PREFIX = 'woyke-configurator-v2';
-const CART_KEY = 'woyke-cart-v1';
 const ENGRAVING_SURCHARGE = 50;
 const FALLBACK_PREVIEW = '/assets/media/images/ring-radiant-floral.webp';
 
@@ -28,15 +30,7 @@ const INTERCHANGEABILITY_BY_CATEGORY = {
 };
 
 const CATEGORY_FALLBACKS = {
-  ring: '/assets/media/images/ring-radiant-floral.webp',
-  'stud-earring': '/assets/media/images/hero-wide.webp',
-  'dangling-earring': '/assets/media/images/hero-portrait.webp',
-  pendant: '/assets/media/images/necklace-heart.webp',
-  necklace: '/assets/media/images/necklace-princess.webp',
-  bracelet: '/assets/media/images/bracelet-radiant.webp',
-  bangle: '/assets/media/images/bracelet-bar.webp',
-  brooch: '/assets/media/images/jade-final-statement.webp',
-  anklet: '/assets/media/images/bracelet-charm.webp',
+  ring: '/images/rings/ring_01.png', 'stud-earring': '/images/stud/stud-earring.png', 'dangling-earring': '/images/dangling/dangling.png', pendant: '/images/pendant/pendant.png', necklace: '/images/Necklace/necklace-gold.png', bracelet: '/images/Bracelet/bracelet.png', bangle: '/images/Bangle/bangle.png', brooch: '/images/Brooch/brooch.png', anklet: '/images/Angklet/angklet.png',
 };
 
 const els = {
@@ -79,24 +73,29 @@ function safeJsonParse(value, fallback) {
   }
 }
 
+const editLineId = getQuery('line');
+const editDesignId = getQuery('design');
+const editLine = editLineId ? cartRepository.get(editLineId) : null;
+const editDesign = editDesignId ? designRepository.get(editDesignId) : null;
+
 function getInitialProduct() {
-  const params = new URLSearchParams(window.location.search);
-  const slug = params.get('product') || params.get('slug') || 'imperial-jade-bloom-ring';
+  const slug = getQuery('product') || editLine?.productSlug || editDesign?.productSlug || 'imperial-jade-bloom-ring';
   return getProductBySlug(slug) || products[0];
 }
 
 const product = getInitialProduct();
-const STORAGE_KEY = `${STORAGE_KEY_PREFIX}:${product.slug}`;
-const restored = safeJsonParse(localStorage.getItem(STORAGE_KEY), {});
+const restored = editLine || editDesign || draftRepository.get(product.slug) || {};
+const restoredEngraving = restored.engraving && typeof restored.engraving === 'object' ? restored.engraving : null;
+const restoredGift = restored.gift && typeof restored.gift === 'object' ? restored.gift : null;
 const state = {
   lang: restored.lang === 'cn' ? 'cn' : 'en',
   currentStepId: typeof restored.currentStepId === 'string' ? restored.currentStepId : null,
   selections: restored.selections && typeof restored.selections === 'object' ? restored.selections : {},
-  engravingText: typeof restored.engravingText === 'string' ? restored.engravingText.slice(0, 30) : '',
-  engravingFont: ['script', 'serif', 'block'].includes(restored.engravingFont) ? restored.engravingFont : 'script',
-  giftMessage: typeof restored.giftMessage === 'string' ? restored.giftMessage.slice(0, 150) : '',
+  engravingText: String(restoredEngraving?.text ?? restored.engravingText ?? restored.engraving ?? '').slice(0, 30),
+  engravingFont: ['script', 'serif', 'block'].includes(restoredEngraving?.font ?? restored.engravingFont) ? (restoredEngraving?.font ?? restored.engravingFont) : 'script',
+  giftMessage: String(restoredGift?.message ?? restored.giftMessage ?? '').slice(0, 150),
   isReviewing: false,
-  lastPreview: els.previewImage?.getAttribute('src') || FALLBACK_PREVIEW,
+  lastPreview: restored.preview?.src || restored.image || els.previewImage?.getAttribute('src') || FALLBACK_PREVIEW,
 };
 
 function t(en, cn) {
@@ -261,14 +260,17 @@ function validateCurrentStep(step) {
 }
 
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+  draftRepository.set(product.slug, {
+    id: restored.id || undefined,
+    productSlug: product.slug,
     lang: state.lang,
     currentStepId: state.currentStepId,
     selections: state.selections,
     engravingText: state.engravingText,
     engravingFont: state.engravingFont,
     giftMessage: state.giftMessage,
-  }));
+    updatedAt: nowIso(),
+  });
 }
 
 function setSelection(stepId, value) {
@@ -288,6 +290,8 @@ function setSelection(stepId, value) {
   render();
 }
 
+let guideReturnFocus = null;
+
 function ensureGuideDialog() {
   let dialog = document.querySelector('#atelier-guide-dialog');
   if (dialog) return dialog;
@@ -305,6 +309,17 @@ function ensureGuideDialog() {
   `;
 
   dialog.querySelector('.atelier-guide-dialog-close')?.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('cancel', (event) => {
+    event.preventDefault();
+    dialog.close();
+  });
+  dialog.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      dialog.close();
+    }
+  });
+  dialog.addEventListener('close', () => guideReturnFocus?.focus());
   dialog.addEventListener('click', (event) => {
     if (event.target === dialog) dialog.close();
   });
@@ -313,6 +328,7 @@ function ensureGuideDialog() {
 }
 
 function openGuideDialog(src, alt, caption) {
+  guideReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   const dialog = ensureGuideDialog();
   const image = dialog.querySelector('.atelier-guide-dialog-image');
   const captionNode = dialog.querySelector('.atelier-guide-dialog-caption');
@@ -638,8 +654,9 @@ function renderSummary() {
     <div class="atelier-summary-total"><span>${t('Demo total', '演示总计')}</span><strong>${formatMoney(price.total)}</strong></div>
     <p class="atelier-summary-note">${t('Representative visual preview. Final feasibility and quotation are confirmed by the WOYKE atelier.', '视觉效果仅供参考。最终可行性与报价由 WOYKE 工坊确认。')}</p>
     <div class="atelier-summary-buttons">
-      <button id="summary-edit" class="btn btn-secondary" type="button"><span>${t('Edit design', '编辑设计')}</span></button>
-      <button id="summary-cart" class="btn" type="button"><span>${t('Add to bag', '加入购物袋')}</span><span>↗</span></button>
+      <button id="summary-edit" class="btn btn-secondary" type="button"><span>${t('Edit design', 'Edit design')}</span></button>
+      <button id="summary-save" class="btn btn-secondary" type="button"><span>${t('Save design', 'Save design')}</span></button>
+      <button id="summary-cart" class="btn" type="button"><span>${t(editLineId ? 'Update bag' : 'Add to bag', editLineId ? 'Update bag' : 'Add to bag')}</span><span>+</span></button>
     </div>`;
 
   els.back.hidden = false;
@@ -654,6 +671,7 @@ function renderSummary() {
     els.next.hidden = false;
     render();
   });
+  document.querySelector('#summary-save')?.addEventListener('click', saveDesign);
   document.querySelector('#summary-cart')?.addEventListener('click', addToCart);
 }
 
@@ -729,7 +747,10 @@ function renderPreview() {
   const colour = selectionLabel('colour');
   const occasion = selectionLabel('occasion');
 
-  els.previewReference.textContent = `${product.slug.toUpperCase()} / ${preview.match.toUpperCase()}`;
+  const selectedCategory = state.selections.category;
+  const isDifferentForm = selectedCategory && selectedCategory !== product.category;
+  const categoryStudyName = categoryLabels[selectedCategory]?.en || selectedCategory;
+  els.previewReference.textContent = isDifferentForm ? `WOYKE / ${String(categoryStudyName).toUpperCase()} STUDY / ${preview.match.toUpperCase()}` : `${product.slug.toUpperCase()} / ${preview.match.toUpperCase()}`;
   els.previewName.textContent = state.isReviewing
     ? t('A piece shaped by you.', '一件由您塑造的作品。')
     : occasion
@@ -761,7 +782,10 @@ function render() {
     state.currentStepId = activeSteps[0]?.id || null;
   }
 
-  els.productName.textContent = state.lang === 'cn' ? product.nameCn : product.name;
+  const selectedCategory = state.selections.category;
+  const isDifferentForm = selectedCategory && selectedCategory !== product.category;
+  const categoryStudyName = categoryLabels[selectedCategory]?.[state.lang === 'cn' ? 'cn' : 'en'];
+  els.productName.textContent = isDifferentForm ? t(`${categoryStudyName || selectedCategory} study`, `${categoryStudyName || selectedCategory} study`) : (state.lang === 'cn' ? product.nameCn : product.name);
   syncLanguageButton();
   els.next.hidden = false;
 
@@ -812,37 +836,52 @@ function goBack() {
   render();
 }
 
-function buildCartItem() {
+function buildPayload() {
   const price = calculatePrice();
-  const preview = resolvePreview(getCurrentStep());
+  const previewResult = resolvePreview(getCurrentStep());
+  const preview = { src: previewResult.src || previewFallbackForCategory(), match: previewResult.match || 'fallback', alt: previewResult.alt || product.name };
+  const selections = { ...state.selections };
+  const selectionLabels = Object.fromEntries(Object.entries(selections).map(([key, value]) => [key, selectionLabel(key, value)]));
+  const engraving = state.engravingText.trim() ? { text: state.engravingText.trim(), font: state.engravingFont } : null;
+  const gift = state.giftMessage.trim() || state.selections.gift ? { message: state.giftMessage.trim(), wrapping: state.selections.gift || 'standard', hidePrice: state.selections.gift === 'hide-price' } : null;
+  const priceBreakdown = {
+    currency: 'SGD', base: price.basePrice,
+    adjustments: price.upcharges.map((item) => ({ stepId: item.stepId, optionValue: selections[item.stepId], label: item.label, amount: item.amount })),
+    engraving: price.engravingSurcharge, total: price.total,
+  };
   return {
-    id: `woyke-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    productId: product.id,
-    productSlug: product.slug,
+    productId: product.id, productSlug: product.slug,
     productName: state.lang === 'cn' ? product.nameCn : product.name,
-    image: preview.src || previewFallbackForCategory(),
-    previewMatch: preview.match,
-    price: price.total,
-    quantity: 1,
-    selections: { ...state.selections },
-    selectionLabels: Object.fromEntries(
-      Object.entries(state.selections).map(([key, value]) => [key, selectionLabel(key, value)])
-    ),
-    engraving: state.engravingText || undefined,
-    engravingFont: state.engravingText ? state.engravingFont : undefined,
-    giftMessage: state.giftMessage || undefined,
-    createdAt: new Date().toISOString(),
+    preview, selections, selectionLabels, engraving, gift, priceBreakdown,
+    unitPrice: price.total, fingerprint: configurationFingerprint(product.slug, selections, engraving, gift),
+    narrative: buildNarrative(), updatedAt: nowIso(),
   };
 }
 
-function addToCart() {
-  const cart = safeJsonParse(localStorage.getItem(CART_KEY), []);
-  const nextCart = Array.isArray(cart) ? [...cart, buildCartItem()] : [buildCartItem()];
-  localStorage.setItem(CART_KEY, JSON.stringify(nextCart));
-  showToast(t('Design added to your shopping bag.', '设计已加入购物袋。'));
-  setTimeout(() => { window.location.href = '/cart/'; }, 450);
+function buildCartItem() {
+  return { ...buildPayload(), id: editLineId || undefined, quantity: editLine?.quantity || 1, createdAt: editLine?.createdAt || nowIso() };
 }
 
+function addToCart() {
+  cartRepository.add(buildCartItem());
+  showToast(t(editLineId ? 'Your bag has been updated.' : 'Design added to your shopping bag.', editLineId ? 'Shopping bag updated.' : 'Design added to your shopping bag.'));
+  setTimeout(() => { window.location.href = '/cart/'; }, 350);
+}
+
+function saveDesign() {
+  const session = sessionRepository.get();
+  if (!session) {
+    const target = new URL(location.href);
+    target.searchParams.set('save', '1');
+    location.href = `/auth/?return=${encodeURIComponent(safeReturnUrl(`${target.pathname}${target.search}`, '/design/'))}`;
+    return null;
+  }
+  const payload = buildPayload();
+  const saved = designRepository.save({ ...payload, id: editDesignId || undefined, ownerUserId: session.userId, name: editDesign?.name || payload.productName, createdAt: editDesign?.createdAt || nowIso() });
+  showToast(t('Design saved to your account.', 'Design saved to your account.'));
+  history.replaceState({}, '', `/design/?product=${encodeURIComponent(product.slug)}&design=${encodeURIComponent(saved.id)}`);
+  return saved;
+}
 let toastTimer = 0;
 function showToast(message) {
   window.clearTimeout(toastTimer);
@@ -860,7 +899,7 @@ function resetConfigurator() {
   state.engravingFont = 'script';
   state.giftMessage = '';
   state.isReviewing = false;
-  localStorage.removeItem(STORAGE_KEY);
+  draftRepository.clear(product.slug);
   render();
 }
 
@@ -879,3 +918,11 @@ queueMicrotask(() => {
 });
 
 render();
+if (getQuery('save') === '1' && sessionRepository.get()) {
+  queueMicrotask(() => {
+    saveDesign();
+    const url = new URL(location.href);
+    url.searchParams.delete('save');
+    history.replaceState({}, '', `${url.pathname}${url.search}`);
+  });
+}

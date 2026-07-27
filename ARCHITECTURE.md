@@ -1,51 +1,38 @@
-# WOYKE Static Architecture
+# WOYKE static application architecture
 
 ## Design principle
 
-Photography carries desire. Product detail establishes trust. Workshop video proves craft. Commerce controls remain conventional. Motion is limited to masked reveals, image changes, restrained optical scaling and viewport-aware video playback.
+Photography carries desire. Product detail establishes trust. Workshop video proves craft. Commerce controls remain conventional. Motion is limited to image changes, restrained reveals and coordinated viewport-aware playback.
 
-## Route map
+## Runtime
 
-### Discovery
-- `/` — campaign homepage, occasion discovery, interchangeability, craft, collection and materials
-- `/shop/` — collection discovery and filtering
-- `/product/` — editorial product detail
-- `/materials/` — material and evidence story
-- `/craft/` — process footage
-- `/consultation/` — private-service request
+- Static HTML and CSS
+- Browser-native ES modules
+- No build step or runtime dependency install
+- Vercel static hosting with direct-refresh-safe route folders
+- Schema-v1 `localStorage` repositories for the frontend demonstration
 
-### Design and purchase
-- `/design/` — 11-step photo-first configurator demonstration
-- `/cart/` — shopping bag
-- `/auth/` — demonstration phone/password/OTP flow
-- `/checkout/` — contact, delivery and payment-method layout
-- `/checkout/success/` — confirmation state
+## Route groups
 
-### Ownership
-- `/account/` — account overview
-- `/account/designs/` — saved designs
-- `/account/orders/` — order journey
-- `/share/` — private design presentation
+- Discovery: `/`, `/shop/`, `/product/`, `/materials/`, `/sustainability/`, `/craft/`, `/consultation/`
+- Design and purchase: `/design/`, `/cart/`, `/auth/`, `/checkout/`, `/checkout/success/`
+- Ownership: `/account/`, `/account/designs/`, `/account/orders/`, `/share/`
 
-## Asset structure
+## JavaScript boundaries
 
-- `assets/media/images/` — client product imagery, generated lifestyle imagery and approved prototype product studies
-- `assets/media/videos/` — short H.264 process and product loops
-- `assets/media/posters/` — static video fallbacks
-- `assets/css/site.css` — tokens, responsive layouts and lightweight motion
-- `assets/js/site.js` — shared header, footer, section theming and viewport video behavior
-- `assets/js/home.js` — occasion, craft and featured-collection interaction
-- `assets/js/design.js` — configurator demonstration state
-- `assets/js/commerce.js` — static auth, checkout and share interactions
+- `assets/js/app/` - formatting, escaping, identifiers, query handling and fingerprints
+- `assets/js/data/` - catalogue adapter over the supplied engine product source
+- `assets/js/domain/` - configuration normalization and safe totals
+- `assets/js/repositories/` - versioned storage plus session, cart, draft, design, order, share and consultation repositories
+- `assets/js/services/` - honest demo authentication and idempotent checkout/order orchestration
+- `assets/js/pages/` - route-specific controllers and rendering
+- `assets/js/design.js` - configurator controller using supplied option/preview data and shared repositories
+- `assets/js/site.js` - header, footer, section theming, reduced motion and coordinated video behavior
+
+## Storage
+
+Each key stores `{ schemaVersion: 1, updatedAt, data }`. Repositories validate reads, recover malformed JSON, and migrate the baseline legacy cart, session and configurator values. See `docs/DATA_AND_STATE.md` and `docs/STATUS.md`.
 
 ## Production migration
 
-Keep the HTML structure and visual components, then move data and state behind APIs:
-
-- Product fixtures → catalogue API
-- Configurator options and prices → rule/pricing service
-- Static images → approved product asset manifest or renderer
-- Local demo authentication → real account and OTP service
-- Static checkout → payment, inventory, shipping and order services
-- Account pages → authenticated customer data
-- Process copy and material claims → client-approved evidence
+Replace one boundary at a time: product fixtures with a catalogue API, browser session with production auth, cart/orders/designs/shares with authorized services, checkout with payment orchestration, consultation with an approved CRM workflow, and static product media with an approved asset manifest. Do not mix partially configured production services into the local demo.

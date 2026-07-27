@@ -1,48 +1,32 @@
-# WOYKE Static HTML Luxury Prototype — V3
+# WOYKE frontend application
 
-A no-install, photo-first static prototype for the WOYKE jewellery platform.
+A no-build, photo-first static frontend with shared browser-native state for the complete WOYKE demonstration journey.
 
-## Run on Windows
-
-Double-click `RUN_WINDOWS.bat`.
-
-Or from PowerShell:
+## Run locally
 
 ```powershell
 node .\serve.mjs
 ```
 
-Open `http://127.0.0.1:4187`.
+Open `http://127.0.0.1:4187/`.
 
-No npm install, Vite, Three.js, WebGL, external fonts or internet connection is required.
+## Validate
 
-## Routes
+```powershell
+node .\scripts\validate.mjs
+node .\scripts\state-smoke.mjs
+Get-ChildItem .\assets\js -Recurse -Filter *.js | ForEach-Object { node --check $_.FullName }
+```
 
-- `/` — campaign homepage
-- `/shop/` — collection
-- `/product/` — editorial product detail
-- `/design/` — 11-step photo-first configurator demo
-- `/craft/` — workshop process
-- `/materials/` — materials and values
-- `/consultation/` — consultation form demo
-- `/cart/` — shopping bag
-- `/auth/` — demo phone/password/OTP sign-in
-- `/checkout/` — conventional static checkout
-- `/checkout/success/` — order confirmation
-- `/account/` — customer dashboard
-- `/account/designs/` — saved designs
-- `/account/orders/` — order journey
-- `/share/` — private design presentation
+## Deploy to Vercel
 
-## Direction
+From this repository root, with an authenticated Vercel CLI:
 
-- Photography and supplied workshop video first
-- Heritage fine-jewellery commerce restraint
-- WOYKE identity, copy and architecture
-- Lightweight CSS/JavaScript transitions
-- No procedural 3D jewellery
-- Environmental claims remain clearly marked as prototype copy
+```powershell
+npx vercel --prod
+```
 
+`vercel.json` configures clean, trailing-slash static routes.
 
 ## Demo credentials
 
@@ -50,4 +34,6 @@ No npm install, Vite, Three.js, WebGL, external fonts or internet connection is 
 - Password: `woyke-demo`
 - OTP: `123456`
 
-All routes are static demonstrations. No payment, authentication, account, inventory, email or messaging service is connected.
+The login, checkout, orders, consultations and public shares are explicit local demonstrations. No payment, OTP, email, CRM, inventory, fulfilment or production database service is connected.
+
+See `docs/STATUS.md` for completed milestones, routes, storage keys, QA results and limitations.
