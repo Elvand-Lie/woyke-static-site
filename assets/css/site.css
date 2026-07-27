@@ -465,7 +465,7 @@ main { min-height: 100vh; }
 .order-summary > div { display:flex; justify-content:space-between; gap:20px; padding:14px 0; border-bottom:1px solid var(--line-light); }
 .order-summary .order-total { font-size:20px; border-bottom:0; padding:24px 0; }.order-summary .btn { width:100%; }.order-summary > p:last-child { font-size:11px; color:var(--muted); }
 
-.featured-craft { grid-column:1/-1; display:grid; grid-template-columns:1.35fr .65fr; }
+.featured-craft { grid-column:1/-1; }
 .featured-craft video { aspect-ratio:16/9; }
 
 @media (min-width: 1100px) {
@@ -478,7 +478,8 @@ main { min-height: 100vh; }
   .page-hero-grid,.split-story,.consultation-grid,.cart-layout { grid-template-columns:1fr; }
   .page-hero-grid > :last-child { justify-self:start; }
   .closing-cta { align-items:start; flex-direction:column; }
-  .featured-craft { grid-template-columns:1fr; }
+
+
   .cart-item { grid-template-columns:180px 1fr; }.cart-item > strong { grid-column:2; }
   .order-summary { position:static; }
 }
