@@ -1,0 +1,27 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+
+type Item = { id: string; productName: string; productSlug: string; image: string; alt: string; quantity: number; unitPriceMinor: number; fingerprint: string; specifications: string[] };
+type LocalLine = { id?: unknown; productName?: unknown; productSlug?: unknown; fingerprint?: unknown; quantity?: unknown; unitPrice?: unknown; selectionLabels?: Record<string, unknown>; preview?: { src?: unknown; alt?: unknown } };
+function readAnonymous(): Item[] { try { const parsed = JSON.parse(localStorage.getItem("woyke.cart.v1") ?? "null") as { data?: unknown } | unknown[] | null; const lines = Array.isArray((parsed as { data?: unknown })?.data) ? (parsed as { data: LocalLine[] }).data : Array.isArray(parsed) ? parsed as LocalLine[] : []; return lines.map((line) => ({ id: String(line.id), productName: String(line.productName ?? "WOYKE piece"), productSlug: String(line.productSlug ?? ""), image: String(line.preview?.src ?? ""), alt: String(line.preview?.alt ?? line.productName ?? "WOYKE piece"), quantity: Number(line.quantity ?? 1), unitPriceMinor: Math.round(Number(line.unitPrice ?? 0) * 100), fingerprint: String(line.fingerprint ?? line.id), specifications: Object.values(line.selectionLabels ?? {}).map(String).filter(Boolean).slice(0, 6) })); } catch { return []; } }
+function writeAnonymous(items: Item[]) { const data = items.map((item) => ({ ...item, unitPrice: item.unitPriceMinor / 100, preview: { src: item.image, alt: item.alt, match: "representative" } })); localStorage.setItem("woyke.cart.v1", JSON.stringify({ schemaVersion: 1, updatedAt: new Date().toISOString(), data })); }
+const money = (minor: number) => new Intl.NumberFormat("en-SG", { style: "currency", currency: "SGD", maximumFractionDigits: 0 }).format(minor / 100);
+
+export function CartView({ initialItems, authenticated }: { initialItems: Item[]; authenticated: boolean }) {
+  const [items, setItems] = useState(initialItems);
+  const [status, setStatus] = useState("");
+  useEffect(() => { if (authenticated) return; const timer = window.setTimeout(() => setItems(readAnonymous()), 0); return () => window.clearTimeout(timer); }, [authenticated]);
+  const total = useMemo(() => items.reduce((sum, item) => sum + item.unitPriceMinor * item.quantity, 0), [items]);
+  async function update(item: Item, quantity?: number) { if (authenticated) { const response = await fetch("/api/account/cart", { method: quantity ? "PATCH" : "DELETE", headers: { "content-type": "application/json" }, body: JSON.stringify({ itemId: item.id, quantity }) }); if (!response.ok) { setStatus("The shopping bag could not be updated."); return; } } const next = quantity ? items.map((current) => current.id === item.id ? { ...current, quantity } : current) : items.filter((current) => current.id !== item.id); setItems(next); setStatus(quantity ? "Quantity updated." : "Piece removed."); if (!authenticated) writeAnonymous(next); }
+  async function clear() {
+    if (!window.confirm("Remove every piece from your shopping bag?")) return;
+    if (authenticated) {
+      const response = await fetch("/api/account/cart", { method: "DELETE", headers: { "content-type": "application/json" }, body: JSON.stringify({ clear: true }) });
+      if (!response.ok) { setStatus("The shopping bag could not be cleared."); return; }
+    }
+    setItems([]); setStatus("Shopping bag cleared."); if (!authenticated) writeAnonymous([]);
+  }
+  if (!items.length) return <div className="empty-state"><h2>Your shopping bag is empty.</h2><p>Begin with a catalogue piece.</p><a className="btn" href="/shop"><span>Browse pieces</span></a></div>;
+  return <div className="cart-layout"><div className="cart-items">{items.map((item) => <article className="cart-item" key={item.id}>{item.image ? <img src={item.image} alt={item.alt} /> : null}<div><p className="mono">{authenticated ? "ACCOUNT BAG" : "TEMPORARY BAG"}</p><h2>{item.productName}</h2>{item.specifications.length ? <p>{item.specifications.join(" / ")}</p> : null}<div className="cart-line-controls"><label>Quantity<select value={item.quantity} onChange={(event) => update(item, Number(event.target.value))}>{[1,2,3,4,5].map((quantity) => <option key={quantity}>{quantity}</option>)}</select></label></div><div className="cart-actions"><a href={`/design?product=${encodeURIComponent(item.productSlug)}&line=${encodeURIComponent(item.id)}`}>Edit design</a><button type="button" onClick={() => update(item)}>Remove</button></div></div><strong>{money(item.unitPriceMinor * item.quantity)}</strong></article>)}</div><aside className="order-summary"><p className="mono">Order summary</p><div><span>Subtotal</span><strong>{money(total)}</strong></div><div className="order-total"><span>Total</span><strong>{money(total)}</strong></div>{authenticated ? <><a className="btn" href="/checkout"><span>Secure checkout</span><span>&rarr;</span></a><p className="prototype-note">Stripe test mode / development inventory fixture.</p></> : <a className="btn" href="/auth?return=/cart"><span>Sign in to save this bag</span></a>}<button className="text-action" type="button" onClick={clear}>Clear shopping bag</button><p className="form-status" role="status">{status}</p></aside></div>;
+}

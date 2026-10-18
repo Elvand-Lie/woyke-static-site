@@ -8,6 +8,7 @@ globalThis.localStorage = storage;
 globalThis.sessionStorage = storage;
 
 const { fingerprint } = await import('../assets/js/app/utils.js');
+const { configuredPieceName } = await import('../assets/js/domain/configuration.js');
 const { cartRepository, orderRepository, sessionRepository, shareRepository } = await import('../assets/js/repositories/repositories.js');
 const { checkoutService } = await import('../assets/js/services/services.js');
 
@@ -35,6 +36,8 @@ cartRepository.add(line('ruby'));
 assert(cartRepository.list().length === 2, 'Distinct configurations were merged');
 cartRepository.add(line('diamond'));
 assert(cartRepository.list().find((item) => item.selections.stone === 'diamond').quantity === 2, 'Identical configuration did not update safely');
+assert(configuredPieceName({ category: 'Necklace', stone: 'Pink Diamond' }) === 'Custom Pink Diamond Necklace', 'Configured piece name was not derived from selections');
+assert(cartRepository.list().find((item) => item.selections.stone === 'ruby').productName === 'Custom ruby Ring', 'Legacy custom cart name was not normalized');
 
 sessionRepository.set({ userId: 'demo-user', displayName: 'Demo', email: 'demo@example.com', phone: '+65 8000 0000', isDemo: true });
 const order = checkoutService.createOrder({ submissionId: 'once', customer: { name: 'Demo', email: 'demo@example.com', phone: '+65 8000 0000' }, delivery: { address1: '1 Demo Street', address2: '', city: 'Singapore', postalCode: '018956', country: 'Singapore' }, paymentMethodLabel: 'Card demonstration' });

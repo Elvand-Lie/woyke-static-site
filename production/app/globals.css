@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@import "./legacy.css";
+@import "./configurator.css";
+
+body { background: var(--ivory); color: var(--ink); }
+.auth-switch { margin-top: 22px; font-size: 13px; }
+.auth-switch a { text-decoration: underline; }
+.admin-sections { padding-top: 20px; }
+.admin-table { margin-bottom: 64px; }
+.admin-table h2 { font: 400 clamp(32px, 4vw, 52px)/1 var(--display); margin: 0 0 22px; }
+.table-scroll { overflow-x: auto; }
+.admin-table table { width: 100%; border-collapse: collapse; min-width: 620px; }
+.admin-table th, .admin-table td { padding: 14px 10px; border-bottom: 1px solid var(--line-light); text-align: left; }
+.admin-table th { font: 10px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+/* Production commerce, consultation, sharing and admin extensions */
+.checkout-layout,.order-detail,.consultation-layout,.shared-design{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.6fr);gap:clamp(36px,7vw,110px);align-items:start}.checkout-form,.consultation-form,.admin-create{display:grid;gap:22px}.checkout-form h2,.admin-create h2{font:400 clamp(28px,4vw,46px)/1.05 var(--display);margin:0}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.form-grid .wide{grid-column:1/-1}.checkout-form label,.consultation-form label,.admin-create label{display:grid;gap:8px;font:10px var(--mono);letter-spacing:.12em;text-transform:uppercase}.checkout-form input,.consultation-form input,.consultation-form select,.consultation-form textarea,.admin-inline input,.admin-inline select,.admin-inline textarea,.admin-create input,.admin-create textarea,.admin-create select{width:100%;border:1px solid var(--line-light);background:transparent;color:inherit;padding:12px;font:14px var(--sans)}.check-field{display:flex!important;grid-template-columns:auto 1fr!important;align-items:center;text-transform:none!important;font:14px var(--sans)!important}.check-field input{width:auto}.order-list{display:grid;gap:1px;background:var(--line-light)}.order-list article{background:var(--ivory);padding:28px;display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:24px}.order-list h2{font:400 28px var(--display);margin:6px 0}.shared-design img,.consultation-layout aside img{width:100%;max-height:720px;object-fit:cover}.shared-design dl>div{display:grid;grid-template-columns:160px 1fr;padding:10px 0;border-bottom:1px solid var(--line-light)}.shared-design dt{text-transform:capitalize;color:var(--muted)}.design-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.design-actions button,.admin-inline button{border:0;background:none;text-decoration:underline;cursor:pointer}.admin-inline{display:grid;grid-template-columns:1fr 120px 120px;gap:8px;min-width:580px}.admin-inline textarea{grid-column:1/-1;min-height:80px}.admin-inline.compact{grid-template-columns:100px minmax(160px,1fr) auto;min-width:380px}.admin-content-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:60px 0}.admin-create{padding:28px;background:var(--cream)}.admin-create textarea{min-height:120px}.prototype-note{font-size:12px;color:var(--muted);line-height:1.5}.form-status{min-height:1.4em}.configurator-engine{padding-top:var(--header-h)}
+@media(max-width:800px){.checkout-layout,.order-detail,.consultation-layout,.shared-design,.admin-content-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}.order-list article{grid-template-columns:1fr}.admin-inline{min-width:520px}}
+
+.text-action{border:0;background:none;color:inherit;text-decoration:underline;cursor:pointer;margin-top:14px}.text-action:hover{opacity:.65}.consultation-context{display:grid;gap:6px;padding:18px;border:1px solid var(--line-light)}.phone-verification{display:grid;gap:12px;margin:20px 0 48px}.admin-media-upload{margin:0 0 64px}.admin-media-upload form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.admin-media-upload input,.admin-media-upload select{width:100%;border:1px solid var(--line-light);background:transparent;color:inherit;padding:12px;font:14px var(--sans)}.admin-media-upload [role=status]{grid-column:1/-1}
+@media(max-width:800px){.admin-media-upload form{grid-template-columns:1fr}}
+
+/* Consultation keeps the proven editorial composition while using the production request API. */
+.consultation-request-form{display:grid;grid-template-columns:1fr;gap:22px;align-content:start}
+.consultation-request-form .consultation-context{margin-bottom:2px}
+.consultation-request-form label{display:grid;gap:8px;font:10px var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.consultation-request-form input,.consultation-request-form select,.consultation-request-form textarea{width:100%;border:1px solid var(--line-light);background:#fff;color:var(--ink);padding:14px;font:14px var(--sans)}
+.consultation-request-form textarea{resize:vertical;min-height:150px}
+.consultation-request-form .btn{width:100%}
+.consultation-request-form .form-status{margin:0}
+.consultation-request-form .prototype-note{margin:0}

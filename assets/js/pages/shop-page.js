@@ -1,5 +1,5 @@
 import { escapeHtml, formatCurrency } from '../app/utils.js';
-import { allCategories, catalogueQuery, categoryName, isLeadMediaProduct, productImage } from '../data/catalogue.js';
+import { allCategories, catalogueQuery, categoryName, productImage } from '../data/catalogue.js';
 
 const grid = document.querySelector('#shop-grid');
 const count = document.querySelector('#shop-count');
@@ -19,7 +19,7 @@ if (grid && search && category && sort) {
     const state = { query: search.value, category: category.value, sort: sort.value };
     const results = catalogueQuery(state);
     grid.innerHTML = results.map((product) => `
-      <article class="shop-card ${isLeadMediaProduct(product) ? 'featured' : ''}" data-category="${escapeHtml(product.category)}">
+      <article class="shop-card" data-category="${escapeHtml(product.category)}">
         <a href="/product/?product=${encodeURIComponent(product.slug)}">
           <div class="shop-card-media"><img src="${escapeHtml(productImage(product))}" alt="${escapeHtml(product.name)}" loading="lazy"></div>
           <div class="shop-card-info"><div><p class="mono">${escapeHtml(categoryName(product.category))}</p><h3>${escapeHtml(product.name)}</h3><p>${escapeHtml(product.materials?.slice(0, 2).join(' / ') || 'Customisable')}</p></div><span class="mono">${formatCurrency(product.basePrice)}</span></div>

@@ -10,7 +10,7 @@ import {
   getProductBySlug,
 } from './configurator-products.js';
 import { resolvePreviewAsset } from './configurator-preview.js';
-import { configurationFingerprint } from './domain/configuration.js';
+import { configurationFingerprint, configuredPieceName } from './domain/configuration.js';
 import { getQuery, nowIso, safeReturnUrl } from './app/utils.js';
 import { cartRepository, designRepository, draftRepository, sessionRepository } from './repositories/repositories.js';
 
@@ -851,7 +851,7 @@ function buildPayload() {
   };
   return {
     productId: product.id, productSlug: product.slug,
-    productName: state.lang === 'cn' ? product.nameCn : product.name,
+    productName: configuredPieceName(selectionLabels),
     preview, selections, selectionLabels, engraving, gift, priceBreakdown,
     unitPrice: price.total, fingerprint: configurationFingerprint(product.slug, selections, engraving, gift),
     narrative: buildNarrative(), updatedAt: nowIso(),

@@ -26,7 +26,7 @@ const requiredGuides = [
 async function walk(dir) {
   const out = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
-    if (['.git', '.vercel', 'node_modules'].includes(entry.name)) continue;
+    if (['.git', '.next', '.vercel', 'node_modules', 'tmp'].includes(entry.name)) continue;
     const absolute = resolve(dir, entry.name);
     if (entry.isDirectory()) out.push(...await walk(absolute));
     else out.push(absolute);

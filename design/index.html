@@ -17,7 +17,8 @@
   <header id="site-header"></header>
   <div id="mobile-menu"></div>
 
-  <main id="main" class="configurator-engine" data-header-theme="split">
+  <main id="main">
+  <div class="configurator-engine" data-header-theme="split">
     <section class="atelier-controls" aria-labelledby="config-question-title">
       <div class="atelier-topline">
         <div>
@@ -82,7 +83,16 @@
         </div>
       </div>
     </aside>
-  </main>
+  </div>
+  <section id="design-film" class="scene scene-dark editorial-film-section" data-header-theme="dark">
+    <div class="container editorial-film-grid">
+      <figure class="editorial-film-frame editorial-film-landscape reveal">
+        <video muted playsinline loop controls preload="metadata" poster="/assets/media/posters/pear-ring-showcase.jpg" src="/assets/media/videos/pear-ring-showcase.mp4" data-autoplay="true" aria-label="Representative pear-cut ring object study"></video>
+        <figcaption class="mono">REPRESENTATIVE OBJECT STUDY / PEAR-CUT RING</figcaption>
+      </figure>
+      <div class="editorial-film-copy reveal"><div class="section-kicker">Made visible</div><h2 class="display-md">See the idea move.</h2><p class="lede">A representative pear-cut study shows proportion, profile and movement in the hand. Your saved specification remains the source of truth; final feasibility and quotation are confirmed by the atelier.</p><a class="btn btn-secondary" href="/consultation/"><span>Discuss your design</span><span>↗</span></a></div>
+    </div>
+  </section>  </main>
 
   <div id="config-toast" class="atelier-toast" role="status" aria-live="polite" hidden></div>
   <footer id="site-footer"></footer>

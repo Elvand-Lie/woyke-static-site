@@ -1,0 +1,10 @@
+"use client";
+import { useState } from "react";
+export function SavedDesignActions({ id, productSlug, isPublic, shareToken }: { id: string; productSlug: string; isPublic: boolean; shareToken: string }) {
+  const [busy, setBusy] = useState(false); const [status, setStatus] = useState("");
+  async function sharing(next: boolean) { setBusy(true); const response = await fetch(`/api/account/designs/${id}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ isPublic: next }) }); const result = await response.json().catch(() => ({})); if (response.ok && result.url) { const url = new URL(result.url, location.origin).href; await navigator.clipboard?.writeText(url); setStatus("Private share link copied."); } else if (response.ok) setStatus("Share link revoked."); else setStatus("Sharing could not be updated."); setBusy(false); }
+  async function remove() { setBusy(true); const response = await fetch(`/api/account/designs/${id}`, { method: "DELETE" }); if (response.ok) location.reload(); else { setBusy(false); setStatus("Design could not be removed."); } }
+  async function duplicate() { setBusy(true); const response = await fetch(`/api/account/designs/${id}`, { method: "POST" }); if (response.ok) location.reload(); else { setBusy(false); setStatus("Design could not be duplicated."); } }
+  async function copy() { const url = new URL(`/share/${shareToken}`, location.origin).href; await navigator.clipboard?.writeText(url); setStatus("Private share link copied."); }
+  return <div className="design-actions"><a href={`/design?product=${encodeURIComponent(productSlug)}&design=${id}`}>Edit design</a><button disabled={busy} type="button" onClick={duplicate}>Duplicate</button>{isPublic ? <><button disabled={busy} type="button" onClick={copy}>Copy share link</button><button disabled={busy} type="button" onClick={() => sharing(false)}>Revoke link</button></> : <button disabled={busy} type="button" onClick={() => sharing(true)}>Create share link</button>}<button disabled={busy} type="button" onClick={remove}>{busy ? "Working…" : "Remove"}</button><span role="status">{status}</span></div>;
+}

@@ -1,5 +1,5 @@
 import { clone, createId, nowIso } from '../app/utils.js';
-import { normalizeCartLine } from '../domain/configuration.js';
+import { configuredPieceName, normalizeCartLine } from '../domain/configuration.js';
 import { readDocument, removeDocument, updateDocument, writeDocument } from './storage.js';
 
 export const KEYS = {
@@ -14,6 +14,14 @@ export const KEYS = {
 
 const arrayValidator = (value) => Array.isArray(value);
 const objectOrNull = (value) => value === null || Boolean(value && typeof value === 'object' && !Array.isArray(value));
+const normalizeDesign = (design) => {
+  if (!design || typeof design !== 'object') return design;
+  const isCustom = Object.keys(design.selections || {}).length > 1;
+  if (!isCustom) return design;
+  const productName = configuredPieceName(design.selectionLabels, design.productName || design.name);
+  const staleName = !design.name || design.name === design.productName;
+  return { ...design, productName, name: staleName ? productName : design.name };
+};
 
 export const sessionRepository = {
   get: () => readDocument(KEYS.session, null, objectOrNull),
@@ -58,8 +66,8 @@ export const draftRepository = {
 };
 
 export const designRepository = {
-  list(ownerUserId) { return readDocument(KEYS.designs, [], arrayValidator).filter((item) => !ownerUserId || item.ownerUserId === ownerUserId); },
-  get(id) { return readDocument(KEYS.designs, [], arrayValidator).find((item) => item.id === id) || null; },
+  list(ownerUserId) { return readDocument(KEYS.designs, [], arrayValidator).map(normalizeDesign).filter((item) => !ownerUserId || item.ownerUserId === ownerUserId); },
+  get(id) { return normalizeDesign(readDocument(KEYS.designs, [], arrayValidator).find((item) => item.id === id) || null); },
   save(design) {
     const all = readDocument(KEYS.designs, [], arrayValidator);
     const id = design.id || createId('design');

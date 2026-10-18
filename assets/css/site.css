@@ -263,8 +263,8 @@ main { min-height: 100vh; }
 .shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .shop-card { min-width: 0; }
 .shop-card.featured { grid-column: span 2; grid-row: span 2; }
-.shop-card-media { display: grid; place-items: center; overflow: hidden; background: var(--cream); }
-.shop-card-media img { width: 100%; aspect-ratio: 1/1; object-fit: contain; transition: transform .7s var(--ease); }
+.shop-card-media { position: relative; display: grid; place-items: center; overflow: hidden; aspect-ratio: 1/1; background: var(--cream); }
+.shop-card-media img { position: absolute; inset: 0; width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: contain; transition: transform .7s var(--ease); }
 .shop-card.featured .shop-card-media img { aspect-ratio: 1.15/1; }
 .shop-card:hover .shop-card-media img { transform: scale(1.025); }
 .media-unavailable { min-height: 200px; }
@@ -331,9 +331,11 @@ main { min-height: 100vh; }
 
 /* Craft page */
 .craft-gallery { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; margin-top: clamp(40px,4vw,64px); }
-.craft-card { position: relative; overflow: hidden; background: #111; }
-.craft-card video { width: 100%; display: block; object-fit: cover; }
+.craft-card { position: relative; overflow: hidden; background: #111; color: var(--ivory); }
+.craft-card video { width: 100%; aspect-ratio: 16/9; display: block; object-fit: contain; background: #0b0b0b; }
 .craft-card div { padding: 22px 20px; }
+.craft-card p { color: rgba(255,255,255,.66); }
+.craft-card .mono { color: var(--gold-light); }
 .craft-card h3 { font-family: var(--display); font-size: 26px; font-weight: 400; margin: 4px 0 8px; }
 
 /* Sustainability */
@@ -864,3 +866,20 @@ body[data-page="auth"] .site-nav,body[data-page="auth"] .header-actions{display:
 @media(max-width:800px){.catalogue-toolbar{grid-template-columns:1fr 1fr}.catalogue-toolbar label:first-child,.catalogue-toolbar .mono{grid-column:1/-1}.account-metrics{grid-template-columns:1fr}.order-record{grid-template-columns:1fr}.order-record>div:last-of-type{justify-items:start}.order-line{grid-template-columns:72px 1fr}.order-line>strong{grid-column:2}.checkout-summary article{grid-template-columns:72px 1fr}.checkout-summary article>strong{grid-column:2}.catalogue-toolbar input,.catalogue-toolbar select{min-height:44px}}
 @media(max-width:480px){.catalogue-toolbar{grid-template-columns:1fr}.catalogue-toolbar>*{grid-column:1!important}.cart-line-controls{align-items:start;flex-direction:column}.order-record{padding:24px}.account-metrics>div{padding:24px}}
 [hidden]{display:none!important}
+
+/* Editorial video studies */
+.editorial-film-section{overflow:hidden}
+.editorial-film-grid{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(300px,.62fr);gap:clamp(42px,8vw,130px);align-items:center}
+.editorial-film-grid.editorial-film-reverse{grid-template-columns:minmax(300px,.62fr) minmax(0,1.18fr)}
+.editorial-film-copy{max-width:580px}
+.editorial-film-copy h2{margin:10px 0 24px}
+.editorial-film-copy .lede{margin-bottom:30px}
+.scene-dark .editorial-film-copy .lede{color:var(--muted-dark)}
+.editorial-film-frame{margin:0;position:relative;overflow:hidden;background:#0b0b0b}
+.editorial-film-frame video{display:block;width:100%;object-fit:cover;background:#0b0b0b}
+.editorial-film-landscape video{aspect-ratio:16/9}
+.editorial-film-portrait{width:min(100%,500px);justify-self:center}
+.editorial-film-portrait video{aspect-ratio:3/4}
+.editorial-film-frame figcaption{position:absolute;left:14px;bottom:12px;padding:8px 10px;background:rgba(21,20,17,.78);color:#fff;pointer-events:none}
+@media(max-width:1024px){.editorial-film-grid,.editorial-film-grid.editorial-film-reverse{grid-template-columns:1fr}.editorial-film-reverse .editorial-film-copy{order:2}.editorial-film-reverse .editorial-film-frame{order:1}.editorial-film-copy{max-width:680px}.editorial-film-portrait{width:min(100%,460px)}}
+@media(max-width:720px){.editorial-film-grid{gap:34px}.editorial-film-frame figcaption{position:static;display:block;background:#151411}.editorial-film-portrait{width:min(100%,380px)}}

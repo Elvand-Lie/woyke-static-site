@@ -1,6 +1,8 @@
 # Dependencies
 node_modules/
 .next/
+*.tsbuildinfo
+**/supabase/.temp/
 .vercel/
 
 # Archives
@@ -20,5 +22,7 @@ screenshots/
 *.log
 .env
 .env.local
+tmp/
+.freebuff/
 
 .vercel

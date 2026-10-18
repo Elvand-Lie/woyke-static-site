@@ -15,6 +15,15 @@ export function cartTotals(lines) {
   return { subtotal, shipping: 0, total: subtotal, currency: 'SGD' };
 }
 
+export function configuredPieceName(selectionLabels = {}, fallback = 'Custom Design') {
+  const category = String(selectionLabels.category || '').trim();
+  const stone = String(selectionLabels.stone || '').trim();
+  const hasStone = stone && !/^(?:none|no stone|without stone)$/i.test(stone);
+  if (category && hasStone) return `Custom ${stone} ${category}`;
+  if (category) return `Custom ${category}`;
+  return fallback;
+}
+
 export function normalizeCartLine(line) {
   if (!line || typeof line !== 'object') return null;
   const preview = typeof line.preview === 'object'
@@ -28,5 +37,7 @@ export function normalizeCartLine(line) {
     : line.giftMessage ? { message: String(line.giftMessage), wrapping: line.selections?.gift || 'standard' } : null;
   const priceBreakdown = line.priceBreakdown || { currency: 'SGD', base: Number(line.price) || 0, adjustments: [], engraving: engraving ? 50 : 0, total: Number(line.price) || 0 };
   const fingerprintValue = line.fingerprint || configurationFingerprint(line.productSlug, line.selections || {}, engraving, gift);
-  return { ...line, preview, engraving, gift, priceBreakdown, fingerprint: fingerprintValue, unitPrice: Math.max(0, Number(line.unitPrice ?? priceBreakdown.total ?? line.price) || 0), quantity: Math.max(1, Math.min(10, Math.trunc(Number(line.quantity) || 1))) };
+  const isCustom = Object.keys(line.selections || {}).length > 1;
+  const productName = isCustom ? configuredPieceName(line.selectionLabels, line.productName) : line.productName;
+  return { ...line, productName, preview, engraving, gift, priceBreakdown, fingerprint: fingerprintValue, unitPrice: Math.max(0, Number(line.unitPrice ?? priceBreakdown.total ?? line.price) || 0), quantity: Math.max(1, Math.min(10, Math.trunc(Number(line.quantity) || 1))) };
 }
