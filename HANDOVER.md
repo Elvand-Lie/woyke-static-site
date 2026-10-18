@@ -15,9 +15,11 @@ The complete WOYKE jewellery web platform, in two parts:
 | Production application | `production/` (Next.js) | https://woyke-production.vercel.app | The real platform: database, accounts, checkout, admin |
 | Static site | repository root (HTML/JS) | https://woyke-static-site.vercel.app | The original site, kept as a rollback target |
 
-Both deployments are live and verified healthy as of the handover date. The production health endpoint (`/api/health`) reports database, Supabase, Stripe and Stripe webhook all connected.
+Both deployments are live. The application deployment is healthy; the Supabase **database project was found paused on 2026-10-18** (free-tier projects pause automatically after roughly one week of inactivity — it had been idle since early August). The data is retained; restoring the project in the Supabase dashboard brings everything back, including the catalogue, accounts and orders. See Section 9.
 
-The repository now contains **everything**: both sites, all documentation, the full product image library, all supplied media, and the AI-assisted jewellery video drafts.
+> **Operational requirement:** while the project stays on the Supabase free tier, the database will pause again after every idle week and the catalogue, sign-in, checkout and admin routes will fail until it is restored in the dashboard. Before public launch, upgrade the project to a paid plan (or otherwise keep it active). After an account transfer, this responsibility moves to the new owner.
+
+The repository contains **everything**: both sites, all documentation, the full product image library, all supplied media, and the AI-assisted jewellery video drafts.
 
 ---
 
@@ -145,8 +147,9 @@ The items below must be transferred to (or recreated under) client-owned account
 ## 9. Verified state at handover
 
 - Production build passes with all 35 routes; typecheck, lint, full test suite, remote RLS tests and seed drift check all pass.
-- Live health check (`/api/health`): database ✅, Supabase ✅, Stripe ✅, Stripe webhook ✅.
-- Browser-accepted journeys: full configurator → save → share → consult → cart → checkout validation → admin, on desktop and 375px mobile, with zero console errors and no layout overflow (40 route/viewport combinations).
+- The application deployment itself is healthy: all editorial routes return 200 and `/api/health` confirms database, Supabase, Stripe and Stripe webhook configuration (note: the health endpoint verifies that configuration is present — it does not ping the database).
+- **Database outage at handover date (2026-10-18):** the Supabase project was paused by the free-tier inactivity policy, so database-backed routes (`/shop`, `/api/catalogue`, sign-in, checkout, admin) return errors until the project is restored in the Supabase dashboard. This is a hosting-account action, not a code fault; no data is lost by pausing. Restore steps: log in at supabase.com with the project owner account → select the project → **Restore project** (takes a few minutes) → re-check `/shop`.
+- Browser-accepted journeys (all passing when the database was active): full configurator → save → share → consult → cart → checkout validation → admin, on desktop and 375px mobile, with zero console errors and no layout overflow (40 route/viewport combinations).
 - Customer/admin data isolation verified against the live database.
 - All 8 supplied jewellery videos are placed and playing on the live site (homepage, Our Craft, Design, Materials).
 
@@ -174,7 +177,8 @@ None of these are code blockers — the platform is built to accept them as conf
 
 On acceptance, the incoming owner should:
 
-1. Gain access to all five accounts in the checklist above and rotate every secret key.
-2. Run `pnpm validate && pnpm test:remote` from `production/` to confirm the toolchain works in their hands.
-3. Trigger a Vercel deployment from the transferred repository and re-check `/api/health`.
-4. Schedule the remaining client inputs (Section 10) with the client directly.
+1. Restore the Supabase project if it is paused (see Section 9) — then keep it active (paid plan recommended for launch).
+2. Gain access to all five accounts in the checklist above and rotate every secret key.
+3. Run `pnpm validate && pnpm test:remote` from `production/` to confirm the toolchain works in their hands.
+4. Trigger a Vercel deployment from the transferred repository and re-check `/shop` and `/api/health`.
+5. Schedule the remaining client inputs (Section 10) with the client directly.
